@@ -34,11 +34,11 @@ class Module implements ConfigProviderInterface,
     public function getServiceConfig(){
         return [
             'invokables'=>[
-                'SiteTemplateList'=>'KpThemeForest\Service\Invokable\SiteTemplateList'
+                'KpGrabAnalysisSite'=>'KpGrab\Service\Invokable\AnalysisSite'
             ],
             'factories'=>[
                 'KpGrabOptions' => 'KpGrab\Service\Factory\KpGrabOptions',
-                'KpGrabHttpClinet'=>'KpThemeForest\Service\Factory\KpGrabHttpClinet'
+                'KpGrabHttpClinet'=>'KpGrab\Service\Factory\KpGrabHttpClinet'
             ]
         ];
     }

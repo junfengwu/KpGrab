@@ -17,7 +17,7 @@ return [
                     'defaults' => array(
                         '__NAMESPACE__' => 'KpGrab\Controller',
                         'controller'    => 'Site',
-                        'action'        => 'getList',
+                        'action'        => 'index',
                     ),
                 ]
             ]
@@ -32,7 +32,7 @@ return [
                         'defaults' => [
                             '__NAMESPACE__' => 'KpGrab\Controller',
                             'controller'    => 'Site',
-                            'action'        => 'index',
+                            'action'        => 'index'
                         ],
                     ]
                 ]
@@ -53,7 +53,16 @@ return [
     ],
 
     'kp_grab'=>[
-
+        'http_adapter'=>'Zend\Http\Client\Adapter\Curl',
+        'http_adapter_options'=>[
+            'curloptions' => [
+                CURLOPT_ENCODING => 'gzip',
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_NOSIGNAL=>1
+            ]
+        ],
+        'console_error_message_color'=>\Zend\Console\ColorInterface::RED
     ]
 
 ];

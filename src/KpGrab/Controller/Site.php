@@ -10,10 +10,20 @@
 namespace KpGrab\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
-class Site extends AbstractActionController{
+class Site extends AbstractActionController
+{
 
-    public function indexAction(){
+    public function indexAction()
+    {
+
+
+        $alreadyAnalyzedUrl = $this->serviceLocator->get('KpGrabAnalysisSite')->init()->run();
+
+        var_dump($alreadyAnalyzedUrl);
+
+        exit;
 
 
     }
