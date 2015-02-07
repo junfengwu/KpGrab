@@ -46,7 +46,6 @@ class AnalysisSite implements ServiceLocatorAwareInterface, EventManagerAwareInt
     protected $console;
 
     /**
-     * @todo 检查url规则
      * @var
      */
     protected $siteUrl;
@@ -90,13 +89,21 @@ class AnalysisSite implements ServiceLocatorAwareInterface, EventManagerAwareInt
         $this->httpClient = $this->serviceLocator->get('ThemeForestHttpClinet');
         $this->console = $this->serviceLocator->get('Console');
         $this->grabOptions = $this->serviceLocator->get('KpGrabOptions');
+
         /**
          * @todo siteUrl 必须是有html后缀的网站入口url
          */
         if ($this->request instanceof Request) {
             $this->siteUrl = $this->request->getParam('url');
         } else {
-            $this->siteUrl = 'http://demo.themepixels.com/webpage/amanda/index.html';
+            // @todo 浏览器访问的话 要设置下route 这里先这样写
+        }
+
+        /**
+         * 没有siteUrl，可能浏览器无参数访问，就当测试状态
+         */
+        if ($this->siteUrl === null) {
+            $this->siteUri = $this->grabOptions->getTestUrl();
         }
 
         /**

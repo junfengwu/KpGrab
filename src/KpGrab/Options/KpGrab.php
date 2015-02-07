@@ -17,6 +17,23 @@ class KpGrab extends AbstractOptions
     protected $httpAdapter;
     protected $httpAdapterOptions;
     protected $consoleErrorMessageColor;
+    protected $testUrl;
+
+    /**
+     * @return mixed
+     */
+    public function getTestUrl()
+    {
+        return $this->testUrl;
+    }
+
+    /**
+     * @param mixed $testUrl
+     */
+    public function setTestUrl($testUrl)
+    {
+        $this->testUrl = $testUrl;
+    }
 
     /**
      * @return mixed

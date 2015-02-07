@@ -13,26 +13,26 @@ return [
             'home' => [
                 'type' => 'Literal',
                 'options' => [
-                    'route'    => '/grabSite',
+                    'route' => '/grabSite',
                     'defaults' => array(
                         '__NAMESPACE__' => 'KpGrab\Controller',
-                        'controller'    => 'Site',
-                        'action'        => 'index',
+                        'controller' => 'Site',
+                        'action' => 'index',
                     ),
                 ]
             ]
         ]
     ],
-    'console' =>[
-        'router'=>[
+    'console' => [
+        'router' => [
             'routes' => [
                 'grab_site' => [
                     'options' => [
-                        'route'    => 'grab site <url>',
+                        'route' => 'grab site <url>',
                         'defaults' => [
                             '__NAMESPACE__' => 'KpGrab\Controller',
-                            'controller'    => 'Site',
-                            'action'        => 'index'
+                            'controller' => 'Site',
+                            'action' => 'index'
                         ],
                     ]
                 ]
@@ -52,17 +52,18 @@ return [
 
     ],
 
-    'kp_grab'=>[
-        'http_adapter'=>'Zend\Http\Client\Adapter\Curl',
-        'http_adapter_options'=>[
+    'kp_grab' => [
+        'http_adapter' => 'Zend\Http\Client\Adapter\Curl',
+        'http_adapter_options' => [
             'curloptions' => [
                 CURLOPT_ENCODING => 'gzip',
                 CURLOPT_FOLLOWLOCATION => false,
                 CURLOPT_TIMEOUT => 10,
-                CURLOPT_NOSIGNAL=>1
+                CURLOPT_NOSIGNAL => 1
             ]
         ],
-        'console_error_message_color'=>\Zend\Console\ColorInterface::RED
+        'console_error_message_color' => \Zend\Console\ColorInterface::RED,
+        'test_url' => 'http://demo.themepixels.com/webpage/amanda/index.html'
     ]
 
 ];
