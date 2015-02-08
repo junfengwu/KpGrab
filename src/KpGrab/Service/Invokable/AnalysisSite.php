@@ -86,9 +86,11 @@ class AnalysisSite implements ServiceLocatorAwareInterface, EventManagerAwareInt
     public function init()
     {
         $this->request = $this->serviceLocator->get('Request');
-        $this->httpClient = $this->serviceLocator->get('ThemeForestHttpClinet');
+
+        $this->httpClient = $this->serviceLocator->get('GrabHttpClient');
         $this->console = $this->serviceLocator->get('Console');
-        $this->grabOptions = $this->serviceLocator->get('KpGrabOptions');
+        $this->grabOptions = $this->serviceLocator->get('GrabOptions');
+
 
         /**
          * @todo siteUrl 必须是有html后缀的网站入口url

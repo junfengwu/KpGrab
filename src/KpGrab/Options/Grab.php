@@ -10,7 +10,7 @@ namespace KpGrab\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
-class KpGrab extends AbstractOptions
+class Grab extends AbstractOptions
 {
     const CONFIG_KEY = 'kp_grab';
 

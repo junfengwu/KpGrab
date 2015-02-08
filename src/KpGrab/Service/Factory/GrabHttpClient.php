@@ -14,13 +14,13 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
-class KpGrabHttpClinet implements FactoryInterface
+class GrabHttpClient implements FactoryInterface
 {
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
-        $themeForestOptions = $serviceLocator->get('KpGrabOptions');
+        $themeForestOptions = $serviceLocator->get('GrabOptions');
 
         $adapterClass = $themeForestOptions->getHttpAdapter();
         $adapter = new $adapterClass;

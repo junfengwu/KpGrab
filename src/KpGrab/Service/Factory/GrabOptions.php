@@ -9,12 +9,12 @@
 
 namespace KpGrab\Service\Factory;
 
-use KpGrab\Options\KpGrab;
+use KpGrab\Options\Grab;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
-class KpGrabOptions implements FactoryInterface
+class GrabOptions implements FactoryInterface
 {
 
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -22,7 +22,7 @@ class KpGrabOptions implements FactoryInterface
 
         $config = $serviceLocator->get('config');
 
-        return new KpGrab($config[KpGrab::CONFIG_KEY]);
+        return new Grab($config[Grab::CONFIG_KEY]);
 
     }
 

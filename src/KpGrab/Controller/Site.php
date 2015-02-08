@@ -19,7 +19,7 @@ class Site extends AbstractActionController
     {
 
 
-        $alreadyAnalyzedUrl = $this->serviceLocator->get('KpGrabAnalysisSite')->init()->run();
+        $alreadyAnalyzedUrl = $this->serviceLocator->get('GrabAnalysisSite')->init()->run();
 
         var_dump($alreadyAnalyzedUrl);
 
