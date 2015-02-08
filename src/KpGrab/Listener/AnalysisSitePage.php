@@ -14,8 +14,6 @@ use KpGrab\Exception\InvalidArgumentException;
 use Zend\Console\Request;
 use Zend\Dom\Document;
 use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -27,11 +25,10 @@ use Zend\Uri\UriFactory;
 use Zend\Http\Client\Adapter\Exception\RuntimeException;
 use Zend\Validator\Uri;
 
-class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwareInterface, EventManagerAwareInterface
+class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
-    use EventManagerAwareTrait;
 
     const URI_ERROR_MESSAGE = '请输入一个正确的url参数';
     const START_ANALYSIS_MESSAGE = '开始分析[%s]页面';
@@ -52,7 +49,6 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'setOrigUri']);
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
     }
-
 
 
     public function setOrigUri(EventInterface $event)

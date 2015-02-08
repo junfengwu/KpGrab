@@ -20,14 +20,19 @@ use Zend\Stdlib\AbstractOptions;
  * Class Grab
  * @package KpGrab\Event
  */
-class Grab extends Event implements ServiceLocatorAwareInterface
+class   Grab extends Event implements ServiceLocatorAwareInterface
 {
 
     use ServiceLocatorAwareTrait;
 
     const ANALYSIS_SITE_PAGE = 'analysis.site.page';
-    const ANALYSIS_SITE_PAGE_ERROR = 'analysis.site.page.error';
+    /**
+     * @todo 还未使用该事件
+     */
     const ANALYSIS_SITE_PAGE_POST = 'analysis.site.page.post';
+
+
+    const ANALYSIS_SITE_STATIC = 'analysis.site.static';
 
     /**
      * @var array
