@@ -9,25 +9,37 @@
 
 namespace KpGrab\Event;
 
+use Zend\Console\ColorInterface;
 use Zend\EventManager\Event;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
+use Zend\Stdlib\AbstractOptions;
 
 /**
  * Class Grab
  * @package KpGrab\Event
  */
-class Grab extends Event implements ServiceLocatorAwareInterface{
+class Grab extends Event implements ServiceLocatorAwareInterface
+{
 
     use ServiceLocatorAwareTrait;
 
+    const ANALYSIS_SITE_PAGE = 'analysis.site.page';
+    const ANALYSIS_SITE_PAGE_ERROR = 'analysis.site.page.error';
+    const ANALYSIS_SITE_PAGE_POST = 'analysis.site.page.post';
+
     /**
-     * @var \Zend\Console\Request | \Zend\Http\PhpEnvironment\Request
+     * @var array
+     */
+    protected $messages;
+    /**
+     * @var \Zend\Console\Request|\Zend\Http\PhpEnvironment\Request
      */
     protected $request;
 
     /**
-     * @var \Zend\Console\Adapter\AdapterInterface | null;
+     * @var \Zend\Console\Adapter\AdapterInterface|false;
      */
     protected $console;
 
@@ -37,7 +49,7 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
     protected $httpClient;
 
     /**
-     * @var \KpGrab\Options\KpGrab
+     * @var \KpGrab\Options\Grab
      */
     protected $grabOptions;
 
@@ -46,10 +58,61 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
      */
     protected $origUri;
 
+
+
     /**
-     * @var \Zend\Uri\Http
+     * @return array
      */
-    protected $uri;
+    public function getMessages()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return array
+     */
+    public function setMessages($messages)
+    {
+        $this->messages = $messages;
+        return $this;
+    }
+
+    public function setMessage($message, $eventName, $color = ColorInterface::WHITE)
+    {
+        if ($color !== ColorInterface::BLACK || ($color === ColorInterface::WHITE && $this->grabOptions->getShowMessage())) {
+            if ($this->console) {
+                $this->console->writeLine($message, $color);
+            } else {
+                // @todo 浏览器
+            }
+        }
+
+        $this->messages[$eventName] = ['color' => $color, 'message' => $message, 'time' => time()];
+
+        return $this;
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getAnalyzedPageUrl()
+    {
+        return $this->analyzedPageUrl;
+    }
+
+    /**
+     * @param array $analyzedPageUrl
+     */
+    public function setAnalyzedPageUrl($analyzedPageUrl)
+    {
+        $this->analyzedPageUrl = $analyzedPageUrl;
+    }
+
+    /**
+     * @var array
+     */
+    protected $analyzedPageUrl;
 
     /**
      * @return \Zend\Console\Request|\Zend\Http\PhpEnvironment\Request
@@ -70,7 +133,7 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
     }
 
     /**
-     * @return null|\Zend\Console\Adapter\AdapterInterface
+     * @return false|\Zend\Console\Adapter\AdapterInterface
      */
     public function getConsole()
     {
@@ -84,6 +147,9 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
      */
     public function setConsole($console)
     {
+        if (!$console instanceof ConsoleAdapterInterface) {
+            $console = false;
+        }
         $this->console = $console;
         return $this;
     }
@@ -109,18 +175,19 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
 
 
     /**
-     * @return \KpGrab\Options\KpGrab
+     * @return \KpGrab\Options\Grab
      */
     public function getGrabOptions()
     {
         return $this->grabOptions;
     }
 
+
     /**
-     * @param $grabOptions
+     * @param AbstractOptions $grabOptions
      * @return $this
      */
-    public function setGrabOptions($grabOptions)
+    public function setGrabOptions(AbstractOptions $grabOptions)
     {
         $this->grabOptions = $grabOptions;
         return $this;
@@ -145,25 +212,31 @@ class Grab extends Event implements ServiceLocatorAwareInterface{
         return $this;
     }
 
-    /**
-     * @return \Zend\Uri\Http
-     */
-    public function getUri()
+
+    public function analysisAbsoluteUrl($url)
     {
-        return $this->uri;
+
+        $url = rtrim($url, '/');
+
+        $urlInfo = parse_url($url);
+
+        if (!array_key_exists('path', $urlInfo)) {
+            $urlInfo['path'] = '/';
+        } else {
+            $pathInfo = pathinfo($urlInfo['path']);
+
+            if (array_key_exists('extension', $pathInfo)) {
+                $urlInfo['path'] = str_replace($pathInfo['filename'] . '.' . $pathInfo['extension'], '', $urlInfo['path']);
+            }
+
+            $urlInfo['path'] = rtrim($urlInfo['path'], '/');
+
+        }
+
+
+        return $urlInfo;
+
     }
-
-
-    /**
-     * @param $uri
-     * @return $this
-     */
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-        return $this;
-    }
-
 
 
 }

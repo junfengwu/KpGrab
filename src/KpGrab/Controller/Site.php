@@ -9,6 +9,7 @@
 
 namespace KpGrab\Controller;
 
+use KpGrab\Event\Grab;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -18,10 +19,14 @@ class Site extends AbstractActionController
     public function indexAction()
     {
 
+        //$alreadyAnalyzedUrl = $this->serviceLocator->get('GrabAnalysisSite')->init()->run();
 
-        $alreadyAnalyzedUrl = $this->serviceLocator->get('GrabAnalysisSite')->init()->run();
+        //var_dump($alreadyAnalyzedUrl);
+        /* @var $grabEvent \KpGrab\Event\Grab */
+        $grabEvent = $this->serviceLocator->get('GrabEvent');
+        $this->events->trigger(Grab::ANALYSIS_SITE_PAGE,$grabEvent);
 
-        var_dump($alreadyAnalyzedUrl);
+        var_dump($grabEvent->getAnalyzedPageUrl());
 
         exit;
 

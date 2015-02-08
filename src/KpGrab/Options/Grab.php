@@ -14,10 +14,80 @@ class Grab extends AbstractOptions
 {
     const CONFIG_KEY = 'kp_grab';
 
+    /**
+     * @var
+     */
     protected $httpAdapter;
+    /**
+     * @var
+     */
     protected $httpAdapterOptions;
+    /**
+     * @var
+     */
     protected $consoleErrorMessageColor;
+    /**
+     * @var
+     */
     protected $testUrl;
+
+    protected $maxReconnectionCount;
+
+    protected $xdebugMaxNestingLevel;
+
+    /**
+     * @return mixed
+     */
+    public function getXdebugMaxNestingLevel()
+    {
+        return $this->xdebugMaxNestingLevel;
+    }
+
+    /**
+     * @param mixed $xdebugMaxNestingLevel
+     */
+    public function setXdebugMaxNestingLevel($xdebugMaxNestingLevel)
+    {
+        $this->xdebugMaxNestingLevel = $xdebugMaxNestingLevel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxReconnectionCount()
+    {
+        return $this->maxReconnectionCount;
+    }
+
+    /**
+     * @param mixed $maxReconnectionCount
+     */
+    public function setMaxReconnectionCount($maxReconnectionCount)
+    {
+        $this->maxReconnectionCount = $maxReconnectionCount;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getShowMessage()
+    {
+        return $this->showMessage;
+    }
+
+    /**
+     * @param boolean $showMessage
+     */
+    public function setShowMessage($showMessage)
+    {
+        $this->showMessage = $showMessage;
+    }
+
+    /**
+     * @var boolean
+     */
+    protected $showMessage;
 
     /**
      * @return mixed

@@ -63,7 +63,10 @@ return [
             ]
         ],
         'console_error_message_color' => \Zend\Console\ColorInterface::RED,
-        'test_url' => 'http://demo.themepixels.com/webpage/amanda/index.html'
+        'test_url' => 'http://demo.themepixels.com/webpage/amanda/index.html',
+        'show_message' => true,
+        'max_reconnection_count' => 5,
+        'xdebug_max_nesting_level' => 600
     ]
 
 ];

@@ -9,28 +9,40 @@
 
 namespace KpGrab\Service\Factory;
 
-use Zend\Http\Client;
+use KpGrab\Event\Grab;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
+/**
+ * Class GrabEvent
+ * @package KpGrab\Service\Factory
+ */
 class GrabEvent implements FactoryInterface
 {
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return \KpGrab\Event\Grab
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
         $grabOptions = $serviceLocator->get('GrabOptions');
+        $request = $serviceLocator->get('Request');
+        $httpClient = $serviceLocator->get('GrabHttpClient');
+        $console = $serviceLocator->get('Console');
 
-        $adapterClass = $themeForestOptions->getHttpAdapter();
-        $adapter = new $adapterClass;
+        /* @var $grabEvent \KpGrab\Event\Grab */
+        $grabEvent = new Grab();
 
-        $adapter->setOptions($themeForestOptions->getHttpAdapterOptions());
+        $grabEvent->setConsole($console)
+                  ->setRequest($request)
+                  ->setHttpClient($httpClient)
+                  ->setGrabOptions($grabOptions)
+                  ->setServiceLocator($serviceLocator);
 
-        $client = new Client();
-        $client->setAdapter($adapter);
-
-        return $client;
+        return $grabEvent;
 
     }
 

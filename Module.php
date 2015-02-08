@@ -9,12 +9,15 @@
 
 namespace KpGrab;
 
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\Mvc\MvcEvent;
 
 class Module implements ConfigProviderInterface,
-    AutoloaderProviderInterface,ServiceProviderInterface
+    AutoloaderProviderInterface,ServiceProviderInterface,BootstrapListenerInterface
 {
     public function getConfig()
     {
@@ -35,11 +38,13 @@ class Module implements ConfigProviderInterface,
         return [
             'invokables'=>[
                 'GrabAnalysisSite'=>'KpGrab\Service\Invokable\AnalysisSite',
-                'GrabEvent'=>'KpGrab\Event\Grab'
+                'AnalysisSitePageListener'=>'KpGrab\Listener\AnalysisSitePage',
+                'XdebugListener'=>'KpGrab\Listener\Xdebug'
             ],
             'factories'=>[
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
-                'GrabHttpClient'=>'KpGrab\Service\Factory\GrabHttpClient'
+                'GrabHttpClient'=>'KpGrab\Service\Factory\GrabHttpClient',
+                'GrabEvent'=>'KpGrab\Service\Factory\GrabEvent',
             ]
         ];
     }
@@ -54,5 +59,18 @@ class Module implements ConfigProviderInterface,
         ];
     }
 
+    public function onBootstrap(EventInterface $e){
+
+        $application = $e->getApplication();
+        $serviceManager = $application->getServiceManager();
+        $eventManager = $application->getEventManager();
+
+
+        if (extension_loaded('xdebug')) {
+            $eventManager->attach($serviceManager->get('XdebugListener'));
+        }
+
+        $eventManager->attach($serviceManager->get('AnalysisSitePageListener'));
+    }
 
 }
