@@ -56,13 +56,11 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
 
     public function runAnalysis(EventInterface $event)
     {
-
         /* @var $event \KpGrab\Event\Grab */
         $grabOptions = $event->getGrabOptions();
         $console = $event->getConsole();
         $httpClient = $event->getHttpClient();
 
-        $pageUrls = ['http://demo.themepixels.com/webpage/amanda/tables.html'];
         $pageUrls = $event->getAnalyzedPageUrl();
 
         while(count($pageUrls) > 0){
@@ -145,9 +143,9 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
 
         }
 
-        var_dump($this->analyzedPageImage);
-        var_dump($this->analyzedPageJs);
-        var_dump($this->analyzedPageCss);
+        $event->setAnalyzedPageImage($this->analyzedPageImage);
+        $event->setAnalyzedPageJs($this->analyzedPageJs);
+        $event->setAnalyzedPageCss($this->analyzedPageCss);
     }
 
 }

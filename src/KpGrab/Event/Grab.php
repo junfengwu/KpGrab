@@ -9,6 +9,7 @@
 
 namespace KpGrab\Event;
 
+use KpGrab\Exception\ExceptionInterface;
 use Zend\Console\ColorInterface;
 use Zend\EventManager\Event;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -31,8 +32,11 @@ class Grab extends Event implements ServiceLocatorAwareInterface
      */
     const ANALYSIS_SITE_PAGE_POST = 'analysis.site.page.post';
 
+    const SITE_DOWNLOAD = 'site.download';
 
     const ANALYSIS_SITE_STATIC = 'analysis.site.static';
+
+    const ANALYSIS_SITE_CSS = 'analysis.site.css';
 
     /**
      * @var array
@@ -63,14 +67,89 @@ class Grab extends Event implements ServiceLocatorAwareInterface
      */
     protected $origUri;
 
+    /**
+     * @var array
+     */
+    protected $analyzedPageUrl = [];
 
+    protected $analyzedPageCss = [];
+
+    protected $analyzedPageJs = [];
+
+    protected $analyzedPageImage = [];
+
+    protected $saveDir;
+
+    /**
+     * @return mixed
+     */
+    public function getSaveDir()
+    {
+        return $this->saveDir;
+    }
+
+    /**
+     * @param mixed $saveDir
+     */
+    public function setSaveDir($saveDir)
+    {
+        $this->saveDir = $saveDir;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnalyzedPageCss()
+    {
+        return $this->analyzedPageCss;
+    }
+
+    /**
+     * @param mixed $analyzedPageCss
+     */
+    public function setAnalyzedPageCss($analyzedPageCss)
+    {
+        $this->analyzedPageCss = $analyzedPageCss;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnalyzedPageJs()
+    {
+        return $this->analyzedPageJs;
+    }
+
+    /**
+     * @param mixed $analyzedPageJs
+     */
+    public function setAnalyzedPageJs($analyzedPageJs)
+    {
+        $this->analyzedPageJs = $analyzedPageJs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnalyzedPageImage()
+    {
+        return $this->analyzedPageImage;
+    }
+
+    /**
+     * @param mixed $analyzedPageImage
+     */
+    public function setAnalyzedPageImage($analyzedPageImage)
+    {
+        $this->analyzedPageImage = $analyzedPageImage;
+    }
 
     /**
      * @return array
      */
     public function getMessages()
     {
-        return $this->message;
+        return $this->messages;
     }
 
     /**
@@ -86,9 +165,17 @@ class Grab extends Event implements ServiceLocatorAwareInterface
     {
         if ($color !== ColorInterface::BLACK || ($color === ColorInterface::WHITE && $this->grabOptions->getShowMessage())) {
             if ($this->console) {
+                if ($message instanceof ExceptionInterface) {
+                    $this->console->writeLine($message->getMessage(), $color);
+                    exit;
+                }
+
                 $this->console->writeLine($message, $color);
             } else {
                 // @todo 浏览器
+                if ($message instanceof ExceptionInterface) {
+                    throw $message;
+                }
             }
         }
 
@@ -114,10 +201,6 @@ class Grab extends Event implements ServiceLocatorAwareInterface
         $this->analyzedPageUrl = $analyzedPageUrl;
     }
 
-    /**
-     * @var array
-     */
-    protected $analyzedPageUrl;
 
     /**
      * @return \Zend\Console\Request|\Zend\Http\PhpEnvironment\Request
@@ -243,8 +326,11 @@ class Grab extends Event implements ServiceLocatorAwareInterface
 
     }
 
-    public function getRealUrl($url) {
-        $url = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $url);
+    public function getRealUrl($url)
+    {
+        $urlInfo = parse_url($url);
+
+        $url = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $urlInfo['path']);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $url), 'strlen');
         $absolutes = array();
         foreach ($parts as $part) {
@@ -255,7 +341,13 @@ class Grab extends Event implements ServiceLocatorAwareInterface
                 $absolutes[] = $part;
             }
         }
-        return implode(DIRECTORY_SEPARATOR, $absolutes);
+
+        $query = '';
+        if (array_key_exists('query', $urlInfo)) {
+            $query = '?' . $urlInfo['query'];
+        }
+
+        return $urlInfo['scheme'] . '://' . $urlInfo['host'] . '/' . implode(DIRECTORY_SEPARATOR, $absolutes) . $query;
     }
 
 

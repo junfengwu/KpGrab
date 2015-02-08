@@ -34,6 +34,7 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
     const ADD_ANALYSIS_MESSAGE = '新增准备分析页面[%s]';
     const RECONNECTION_MESSAGE = '[%s]页面开始第[%s]次重连';
     const STATUS_CODE_ERROR_MESSAGE = '[%s]页面连接错误状态码为:[%d]';
+    const SAVE_DIR_ERROR_MESSAGE = '保存路径[%s]不存在或不可写';
 
     protected $alreadyAnalyzedPageUrl = [];
     protected $readyAnalyzedPageUrl = [];
@@ -45,10 +46,30 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
 
     public function attach(EventManagerInterface $events)
     {
+        $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'setSaveDir']);
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'setOrigUri']);
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
     }
 
+    public function setSaveDir(EventInterface $event){
+        /* @var $event \KpGrab\Event\Grab */
+        $request = $event->getRequest();
+        $grabOptions = $event->getGrabOptions();
+
+        $saveDir = $request->getParam('saveDir');
+
+        if(!$saveDir){
+            $saveDir = $grabOptions->getDefaultSaveDir();
+        }
+
+        if(!is_dir($saveDir) || !is_writable($saveDir)){
+            $event->setMessage(new InvalidArgumentException(sprintf(AnalysisSitePage::SAVE_DIR_ERROR_MESSAGE,$saveDir)),$grabOptions->getConsoleErrorMessageColor());
+            return;
+        }
+
+        $event->setSaveDir($saveDir);
+
+    }
 
     public function setOrigUri(EventInterface $event)
     {
@@ -70,19 +91,13 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
          * 检查Url参数，是否是Url,是否是绝对地址
          */
         if (!$uri->isValid() || !$uri->isAbsolute()) {
-            if ($console) {
-                $console->writeLine(AnalysisSitePage::URI_ERROR_MESSAGE, $grabOptions->getConsoleErrorMessageColor());
-            } else {
-                throw new InvalidArgumentException(AnalysisSitePage::URI_ERROR_MESSAGE);
-            }
-            $event->stopPropagation(true);
+            $event->setMessage(new InvalidArgumentException(AnalysisSitePage::URI_ERROR_MESSAGE),$grabOptions->getConsoleErrorMessageColor());
             return;
         }
 
         $event->setOrigUri($uri);
 
         $this->readyAnalyzedPageUrl[] = $uri->toString();
-
 
     }
 

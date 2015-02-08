@@ -35,6 +35,24 @@ class Grab extends AbstractOptions
 
     protected $xdebugMaxNestingLevel;
 
+    protected $defaultSaveDir;
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultSaveDir()
+    {
+        return $this->defaultSaveDir;
+    }
+
+    /**
+     * @param mixed $defaultSaveDir
+     */
+    public function setDefaultSaveDir($defaultSaveDir)
+    {
+        $this->defaultSaveDir = $defaultSaveDir;
+    }
+
     /**
      * @return mixed
      */

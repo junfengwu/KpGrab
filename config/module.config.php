@@ -28,7 +28,7 @@ return [
             'routes' => [
                 'grab_site' => [
                     'options' => [
-                        'route' => 'grab site <url>',
+                        'route' => 'grab site <url> [--saveDir=]',
                         'defaults' => [
                             '__NAMESPACE__' => 'KpGrab\Controller',
                             'controller' => 'Site',
@@ -66,7 +66,8 @@ return [
         'test_url' => 'http://demo.themepixels.com/webpage/amanda/index.html',
         'show_message' => true,
         'max_reconnection_count' => 5,
-        'xdebug_max_nesting_level' => 600
+        'xdebug_max_nesting_level' => 600,
+        'default_save_dir'=> realpath(__DIR__ . '/../data')
     ]
 
 ];

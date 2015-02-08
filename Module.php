@@ -17,7 +17,7 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 
 class Module implements ConfigProviderInterface,
-    AutoloaderProviderInterface,ServiceProviderInterface,BootstrapListenerInterface
+    AutoloaderProviderInterface, ServiceProviderInterface, BootstrapListenerInterface
 {
     public function getConfig()
     {
@@ -34,33 +34,39 @@ class Module implements ConfigProviderInterface,
             ],
         ];
     }
-    public function getServiceConfig(){
+
+    public function getServiceConfig()
+    {
         return [
-            'invokables'=>[
-                'GrabAnalysisSite'=>'KpGrab\Service\Invokable\AnalysisSite',
-                'AnalysisSitePageListener'=>'KpGrab\Listener\AnalysisSitePage',
-                'AnalysisSiteStaticListener'=>'KpGrab\Listener\AnalysisSiteStatic',
-                'XdebugListener'=>'KpGrab\Listener\Xdebug'
+            'invokables' => [
+                'GrabAnalysisSite' => 'KpGrab\Service\Invokable\AnalysisSite',
+                'AnalysisSitePageListener' => 'KpGrab\Listener\AnalysisSitePage',
+                'AnalysisSiteStaticListener' => 'KpGrab\Listener\AnalysisSiteStatic',
+                'AnalysisSiteCss'=>'KpGrab\Listener\AnalysisSiteCss',
+                'SiteDownloadListener' => 'KpGrab\Listener\SiteDownload',
+                'XdebugListener' => 'KpGrab\Listener\Xdebug'
             ],
-            'factories'=>[
+            'factories' => [
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
-                'GrabHttpClient'=>'KpGrab\Service\Factory\GrabHttpClient',
-                'GrabEvent'=>'KpGrab\Service\Factory\GrabEvent',
+                'GrabHttpClient' => 'KpGrab\Service\Factory\GrabHttpClient',
+                'GrabEvent' => 'KpGrab\Service\Factory\GrabEvent',
             ]
         ];
     }
 
 
-    public function getViewHelperConfig(){
+    public function getViewHelperConfig()
+    {
 
         return [
-            'invokables'=>[
+            'invokables' => [
 
             ]
         ];
     }
 
-    public function onBootstrap(EventInterface $e){
+    public function onBootstrap(EventInterface $e)
+    {
 
         $application = $e->getApplication();
         $serviceManager = $application->getServiceManager();
@@ -73,6 +79,8 @@ class Module implements ConfigProviderInterface,
 
         $eventManager->attach($serviceManager->get('AnalysisSitePageListener'));
         $eventManager->attach($serviceManager->get('AnalysisSiteStaticListener'));
+        $eventManager->attach($serviceManager->get('AnalysisSiteCss'));
+        $eventManager->attach($serviceManager->get('SiteDownloadListener'));
     }
 
 }
