@@ -330,16 +330,22 @@ class Grab extends Event implements ServiceLocatorAwareInterface
     {
         $urlInfo = parse_url($url);
 
-        $url = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $urlInfo['path']);
-        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $url), 'strlen');
-        $absolutes = array();
-        foreach ($parts as $part) {
-            if ('.' == $part) continue;
-            if ('..' == $part) {
-                array_pop($absolutes);
-            } else {
-                $absolutes[] = $part;
+        if (isset($urlInfo['path'])) {
+            $url = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $urlInfo['path']);
+            $parts = array_filter(explode(DIRECTORY_SEPARATOR, $url), 'strlen');
+            $absolutes = array();
+            foreach ($parts as $part) {
+                if ('.' == $part) continue;
+                if ('..' == $part) {
+                    array_pop($absolutes);
+                } else {
+                    $absolutes[] = $part;
+                }
             }
+
+            $urlInfo['path'] = implode(DIRECTORY_SEPARATOR, $absolutes);
+        } else {
+            $urlInfo['path'] = '';
         }
 
         $query = '';
@@ -347,7 +353,7 @@ class Grab extends Event implements ServiceLocatorAwareInterface
             $query = '?' . $urlInfo['query'];
         }
 
-        return $urlInfo['scheme'] . '://' . $urlInfo['host'] . '/' . implode(DIRECTORY_SEPARATOR, $absolutes) . $query;
+        return $urlInfo['scheme'] . '://' . $urlInfo['host'] . '/' . $urlInfo['path'] . $query;
     }
 
 

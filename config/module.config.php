@@ -58,7 +58,7 @@ return [
             'curloptions' => [
                 CURLOPT_ENCODING => 'gzip',
                 CURLOPT_FOLLOWLOCATION => false,
-                CURLOPT_TIMEOUT => 10,
+                CURLOPT_TIMEOUT => 20,
                 CURLOPT_NOSIGNAL => 1
             ]
         ],

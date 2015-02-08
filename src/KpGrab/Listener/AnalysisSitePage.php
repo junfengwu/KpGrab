@@ -172,7 +172,6 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
             if (!$uriValidator->isValid($findUrl)) {
 
                 // 如果是 /开始表示跟目录
-
                 $findUrl = $urlInfo['scheme'] . '://' . $urlInfo['host']. $urlInfo['path'] .'/' . $findUrl;
             }
 
@@ -185,10 +184,16 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
                 continue;
             }
 
+            if($findUrlExtension !== 'html'){
+                continue;
+            }
+
             // 检查锚点跳过
             if(parse_url($findUrl,PHP_URL_FRAGMENT)){
                 continue;
             }
+
+            $findUrl = $event->getRealUrl($findUrl);
 
             // 判断host是否是该网站，是否有添加过该页面
             if($event->getOrigUri()->getHost() === parse_url($findUrl,PHP_URL_HOST) &&
@@ -196,6 +201,7 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
                 !in_array($findUrl, $this->alreadyAnalyzedPageUrl) &&
                 !in_array($findUrl, $this->errorAnalyzedPageUrl)
             ){
+
                 $this->readyAnalyzedPageUrl[] = $findUrl;
                 $event->setMessage(sprintf(AnalysisSitePage::ADD_ANALYSIS_MESSAGE, $findUrl) , $event->getName());
             }
