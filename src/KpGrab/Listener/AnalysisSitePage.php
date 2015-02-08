@@ -25,6 +25,13 @@ use Zend\Uri\UriFactory;
 use Zend\Http\Client\Adapter\Exception\RuntimeException;
 use Zend\Validator\Uri;
 
+/**
+ *
+ * http://nadeausoftware.com/articles/2008/01/php_tip_how_extract_urls_web_page
+ * php public/index.php grab site http://admindesigns.com/framework/dashboard.html --saveDir=/Users/huangzhengjia/WebServer/zf2/data
+ * Class AnalysisSitePage
+ * @package KpGrab\Listener
+ */
 class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
