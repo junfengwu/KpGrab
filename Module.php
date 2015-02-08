@@ -39,6 +39,7 @@ class Module implements ConfigProviderInterface,
             'invokables'=>[
                 'GrabAnalysisSite'=>'KpGrab\Service\Invokable\AnalysisSite',
                 'AnalysisSitePageListener'=>'KpGrab\Listener\AnalysisSitePage',
+                'AnalysisSiteStaticListener'=>'KpGrab\Listener\AnalysisSiteStatic',
                 'XdebugListener'=>'KpGrab\Listener\Xdebug'
             ],
             'factories'=>[
@@ -71,6 +72,7 @@ class Module implements ConfigProviderInterface,
         }
 
         $eventManager->attach($serviceManager->get('AnalysisSitePageListener'));
+        $eventManager->attach($serviceManager->get('AnalysisSiteStaticListener'));
     }
 
 }

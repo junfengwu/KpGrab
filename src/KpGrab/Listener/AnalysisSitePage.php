@@ -47,7 +47,7 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'setOrigUri']);
-        $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
+        #$this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
     }
 
 

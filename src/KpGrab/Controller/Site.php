@@ -26,7 +26,6 @@ class Site extends AbstractActionController
         $grabEvent = $this->serviceLocator->get('GrabEvent');
         $this->events->trigger(Grab::ANALYSIS_SITE_PAGE, $grabEvent);
         $this->events->trigger(Grab::ANALYSIS_SITE_STATIC, $grabEvent);
-        var_dump($grabEvent->getAnalyzedPageUrl());
 
         exit;
 

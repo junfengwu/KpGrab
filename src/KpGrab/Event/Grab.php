@@ -20,7 +20,7 @@ use Zend\Stdlib\AbstractOptions;
  * Class Grab
  * @package KpGrab\Event
  */
-class   Grab extends Event implements ServiceLocatorAwareInterface
+class Grab extends Event implements ServiceLocatorAwareInterface
 {
 
     use ServiceLocatorAwareTrait;

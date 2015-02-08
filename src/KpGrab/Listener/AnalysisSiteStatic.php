@@ -33,11 +33,19 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
     use ListenerAggregateTrait;
     use EventManagerAwareTrait;
 
-    protected $alreadyAnalyzedPageUrl = [];
-    protected $readyAnalyzedPageUrl = [];
-    protected $errorAnalyzedPageUrl = [];
+    const START_ANALYSIS_STATIC_MESSAGE = '开始分析[%s]页面的静态文件';
+    const RECONNECTION_MESSAGE = '[%s]页面开始第[%s]次重连';
 
-    protected $continueSuffix = ['.png','.jpeg','.jpg','.gif'];
+
+    protected $allowImageSuffix = ['jpg','jpeg','gif','png'];
+    protected $allowJsSuffix = ['js'];
+    protected $allowCssSuffix = ['css'];
+
+    protected $analyzedPageCss = [];
+    protected $analyzedPageJs = [];
+    protected $analyzedPageImage = [];
+
+    protected $errorAnalyzedPageUrl = [];
 
     public static $reconnectionCount = 0;
 
@@ -49,13 +57,90 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
 
     public function runAnalysis(EventInterface $event)
     {
+
         /* @var $event \KpGrab\Event\Grab */
-
+        $grabOptions = $event->getGrabOptions();
         $console = $event->getConsole();
+        $httpClient = $event->getHttpClient();
 
-        foreach($event->getAnalyzedPageUrl() as $pageUrl){
-            $console->writeLine($pageUrl);
+        $pageUrls = ['http://demo.themepixels.com/webpage/amanda/tables.html'];
+
+        while(count($pageUrls) > 0){
+
+            $url = array_shift($pageUrls);
+
+            $urlInfo = $event->analysisAbsoluteUrl($url);
+
+            $event->setMessage(sprintf(AnalysisSiteStatic::START_ANALYSIS_STATIC_MESSAGE, $url) , $event->getName());
+
+            try {
+                $response = $httpClient->setUri($url)->send();
+            } catch (RuntimeException $e) {
+                $event->setMessage(sprintf(AnalysisSiteStatic::RECONNECTION_MESSAGE, $url , ++AnalysisSiteStatic::$reconnectionCount) , $event->getName() , $grabOptions->getConsoleErrorMessageColor());
+
+                if(AnalysisSitePage::$reconnectionCount >= $grabOptions->getMaxReconnectionCount()){
+                    AnalysisSitePage::$reconnectionCount = 0;
+                    $this->errorAnalyzedPageUrl[] = $url;
+                }else{
+                    array_unshift($pageUrls, $url);
+                }
+
+                continue;
+            }
+
+            AnalysisSitePage::$reconnectionCount = 0;
+
+            $document = new Document($response->getContent());
+            $dom = new Document\Query();
+
+            $findUrlList = [];
+
+            foreach ($dom->execute('link', $document, Document\Query::TYPE_CSS) as $node) {
+                $findUrlList[] =$node->getAttribute('href');
+            }
+
+            foreach ($dom->execute('script', $document, Document\Query::TYPE_CSS) as $node) {
+                $src = $node->getAttribute('src');
+                if($src){
+                    $findUrlList[] = $src;
+                }
+            }
+
+            foreach ($dom->execute('img', $document, Document\Query::TYPE_CSS) as $node) {
+                $findUrlList[] =$node->getAttribute('src');
+            }
+
+            $uriValidator = new Uri(['allowRelative' => false]);
+
+            foreach($findUrlList as $findUrl){
+
+                if (!$uriValidator->isValid($findUrl)) {
+                    $findUrl = $urlInfo['scheme'] . '://' . $urlInfo['host']. $urlInfo['path'] .'/' . $findUrl;
+                }
+
+                if($event->getOrigUri()->getHost() !== parse_url($findUrl,PHP_URL_HOST)){
+                    continue;
+                }
+
+                $findUrlExtension = pathinfo($findUrl,PATHINFO_EXTENSION);
+
+                if($findUrlExtension) {
+                    if (in_array($findUrlExtension, $this->allowCssSuffix) && !in_array($findUrl, $this->analyzedPageCss)) {
+                        $this->analyzedPageCss[] = $findUrl;
+                    } else if (in_array($findUrlExtension, $this->allowJsSuffix) && !in_array($findUrl, $this->analyzedPageJs)) {
+                        $this->analyzedPageJs[] = $findUrl;
+                    } else if (in_array($findUrlExtension, $this->allowImageSuffix) && !in_array($findUrl, $this->analyzedPageImage)) {
+                        $this->analyzedPageImage[] = $findUrl;
+                    }
+                }
+
+            }
+
         }
+
+        var_dump($this->analyzedPageImage);
+        var_dump($this->analyzedPageJs);
+        var_dump($this->analyzedPageCss);
     }
 
 }
