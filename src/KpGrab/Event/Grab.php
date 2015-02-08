@@ -243,5 +243,20 @@ class Grab extends Event implements ServiceLocatorAwareInterface
 
     }
 
+    public function getRealUrl($url) {
+        $url = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $url);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $url), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part) continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        return implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
+
 
 }

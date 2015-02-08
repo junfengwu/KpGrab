@@ -33,9 +33,8 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
     use ListenerAggregateTrait;
     use EventManagerAwareTrait;
 
-    const START_ANALYSIS_STATIC_MESSAGE = '开始分析[%s]页面的静态文件';
     const RECONNECTION_MESSAGE = '[%s]页面开始第[%s]次重连';
-
+    const ADD_ANALYSIS_MESSAGE = '新增静态文件[%s]';
 
     protected $allowImageSuffix = ['jpg','jpeg','gif','png'];
     protected $allowJsSuffix = ['js'];
@@ -64,14 +63,13 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
         $httpClient = $event->getHttpClient();
 
         $pageUrls = ['http://demo.themepixels.com/webpage/amanda/tables.html'];
+        $pageUrls = $event->getAnalyzedPageUrl();
 
         while(count($pageUrls) > 0){
 
             $url = array_shift($pageUrls);
 
             $urlInfo = $event->analysisAbsoluteUrl($url);
-
-            $event->setMessage(sprintf(AnalysisSiteStatic::START_ANALYSIS_STATIC_MESSAGE, $url) , $event->getName());
 
             try {
                 $response = $httpClient->setUri($url)->send();
@@ -122,6 +120,9 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
                     continue;
                 }
 
+                // 解决 ../../../ 问题
+                $findUrl = $event->getRealUrl($findUrl);
+
                 $findUrlExtension = pathinfo($findUrl,PATHINFO_EXTENSION);
 
                 if($findUrlExtension) {
@@ -131,7 +132,13 @@ class AnalysisSiteStatic implements ListenerAggregateInterface, ServiceLocatorAw
                         $this->analyzedPageJs[] = $findUrl;
                     } else if (in_array($findUrlExtension, $this->allowImageSuffix) && !in_array($findUrl, $this->analyzedPageImage)) {
                         $this->analyzedPageImage[] = $findUrl;
+                    } else{
+                        // 后缀不对或者已添加过
+                        continue;
                     }
+
+                    $event->setMessage(sprintf(AnalysisSiteStatic::ADD_ANALYSIS_MESSAGE, $findUrl) , $event->getName());
+
                 }
 
             }

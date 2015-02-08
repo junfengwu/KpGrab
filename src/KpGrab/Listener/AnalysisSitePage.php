@@ -31,7 +31,6 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
     use ListenerAggregateTrait;
 
     const URI_ERROR_MESSAGE = '请输入一个正确的url参数';
-    const START_ANALYSIS_MESSAGE = '开始分析[%s]页面';
     const ADD_ANALYSIS_MESSAGE = '新增准备分析页面[%s]';
     const RECONNECTION_MESSAGE = '[%s]页面开始第[%s]次重连';
     const STATUS_CODE_ERROR_MESSAGE = '[%s]页面连接错误状态码为:[%d]';
@@ -40,14 +39,14 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
     protected $readyAnalyzedPageUrl = [];
     protected $errorAnalyzedPageUrl = [];
 
-    protected $continueSuffix = ['.png','.jpeg','.jpg','.gif'];
+    protected $continueSuffix = ['png','jpeg','jpg','gif'];
 
     public static $reconnectionCount = 0;
 
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'setOrigUri']);
-        #$this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
+        $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::ANALYSIS_SITE_PAGE, [$this, 'runAnalysis']);
     }
 
 
@@ -104,8 +103,6 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
 
         $urlInfo = $event->analysisAbsoluteUrl($url);
 
-        $event->setMessage(sprintf(AnalysisSitePage::START_ANALYSIS_MESSAGE, $url) , $event->getName());
-
         /**
          * 开始连接地址，连接超时，重新连接
          */
@@ -140,7 +137,6 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
 
         $this->alreadyAnalyzedPageUrl[] = $url;
 
-
         $document = new Document($response->getContent());
         $dom = new Document\Query();
 
@@ -159,17 +155,19 @@ class AnalysisSitePage implements ListenerAggregateInterface, ServiceLocatorAwar
         foreach($findUrlList as $findUrl){
 
             if (!$uriValidator->isValid($findUrl)) {
+
+                // 如果是 /开始表示跟目录
+
                 $findUrl = $urlInfo['scheme'] . '://' . $urlInfo['host']. $urlInfo['path'] .'/' . $findUrl;
             }
 
             $findUrl = rtrim($findUrl,'#');
             $findUrl = rtrim($findUrl,'/');
 
-            // 检查需要忽略的后缀
-            foreach($this->continueSuffix as $suffix){
-                if(strrchr(strtolower($findUrl), $suffix) === $suffix){
-                    continue 2;
-                }
+            $findUrlExtension = pathinfo($findUrl,PATHINFO_EXTENSION);
+
+            if(in_array($findUrlExtension,$this->continueSuffix)){
+                continue;
             }
 
             // 检查锚点跳过
