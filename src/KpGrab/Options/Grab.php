@@ -10,39 +10,74 @@ namespace KpGrab\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
+/**
+ * Class Grab
+ * @package KpGrab\Options
+ */
 class Grab extends AbstractOptions
 {
+    /**
+     *
+     */
     const CONFIG_KEY = 'kp_grab';
 
     /**
-     * @var
+     * @var \Zend\Http\Client\Adapter\AdapterInterface
      */
     protected $httpAdapter;
+
     /**
-     * @var
+     * @var array
      */
     protected $httpAdapterOptions;
+
     /**
-     * @var
+     * @var int
      */
     protected $consoleErrorMessageColor;
 
+    /**
+     * @var int
+     */
     protected $maxReconnectionCount;
 
+    /**
+     * @var int
+     */
     protected $xdebugMaxNestingLevel;
 
+    /**
+     * @var string
+     */
     protected $defaultSaveDir;
 
+    /**
+     * @var array
+     */
     protected $grabAllowPageSuffix;
 
+    /**
+     * @var array
+     */
     protected $grabAllowStaticSuffix;
 
+    /**
+     * @var bool
+     */
     protected $outputError;
 
+    /**
+     * @var string
+     */
     protected $outputErrorFilename;
 
     /**
-     * @return mixed
+     * @var bool
+     */
+    protected $showMessage;
+
+    /**
+     * @return string
      */
     public function getOutputErrorFilename()
     {
@@ -50,7 +85,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $outputErrorFilename
+     * @param $outputErrorFilename
      */
     public function setOutputErrorFilename($outputErrorFilename)
     {
@@ -58,7 +93,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getOutputError()
     {
@@ -66,16 +101,15 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $outputError
+     * @param $outputError
      */
     public function setOutputError($outputError)
     {
         $this->outputError = $outputError;
     }
 
-
     /**
-     * @return mixed
+     * @return array
      */
     public function getGrabAllowStaticSuffix()
     {
@@ -83,7 +117,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $grabAllowStaticSuffix
+     * @param $grabAllowStaticSuffix
      */
     public function setGrabAllowStaticSuffix($grabAllowStaticSuffix)
     {
@@ -91,7 +125,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getGrabAllowPageSuffix()
     {
@@ -99,15 +133,16 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $grabAllowPageSuffix
+     * @param $grabAllowPageSuffix
      */
     public function setGrabAllowPageSuffix($grabAllowPageSuffix)
     {
         $this->grabAllowPageSuffix = $grabAllowPageSuffix;
     }
 
+
     /**
-     * @return mixed
+     * @return string
      */
     public function getDefaultSaveDir()
     {
@@ -115,7 +150,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $defaultSaveDir
+     * @param $defaultSaveDir
      */
     public function setDefaultSaveDir($defaultSaveDir)
     {
@@ -123,7 +158,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getXdebugMaxNestingLevel()
     {
@@ -131,19 +166,26 @@ class Grab extends AbstractOptions
     }
 
 
+    /**
+     * @param $xdebugMaxNestingLevel
+     */
     public function setXdebugMaxNestingLevel($xdebugMaxNestingLevel)
     {
         $this->xdebugMaxNestingLevel = $xdebugMaxNestingLevel;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getMaxReconnectionCount()
     {
         return $this->maxReconnectionCount;
     }
 
+    /**
+     * @param $maxReconnectionCount
+     * @return $this
+     */
     public function setMaxReconnectionCount($maxReconnectionCount)
     {
         $this->maxReconnectionCount = $maxReconnectionCount;
@@ -151,7 +193,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getShowMessage()
     {
@@ -159,21 +201,16 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param boolean $showMessage
+     * @param $showMessage
      */
     public function setShowMessage($showMessage)
     {
         $this->showMessage = $showMessage;
     }
 
-    /**
-     * @var boolean
-     */
-    protected $showMessage;
-
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getConsoleErrorMessageColor()
     {
@@ -181,7 +218,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $consoleErrorMessageColor
+     * @param $consoleErrorMessageColor
      */
     public function setConsoleErrorMessageColor($consoleErrorMessageColor)
     {
@@ -189,7 +226,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return mixed
+     * @return \Zend\Http\Client\Adapter\AdapterInterface
      */
     public function getHttpAdapter()
     {
@@ -197,7 +234,7 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @param mixed $httpAdapter
+     * @param $httpAdapter
      */
     public function setHttpAdapter($httpAdapter)
     {
@@ -205,15 +242,16 @@ class Grab extends AbstractOptions
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getHttpAdapterOptions()
     {
         return $this->httpAdapterOptions;
     }
 
+
     /**
-     * @param mixed $httpAdapterOptions
+     * @param $httpAdapterOptions
      */
     public function setHttpAdapterOptions($httpAdapterOptions)
     {

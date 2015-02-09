@@ -34,9 +34,9 @@ class GrabEvent implements FactoryInterface
         $grabEvent = new Grab();
 
         $grabEvent->setRequest($request)
-                  ->setGrabHttpClient($httpClient)
-                  ->setGrabResult($grabResult)
-                  ->setGrabOptions($grabOptions);
+            ->setGrabHttpClient($httpClient)
+            ->setGrabResult($grabResult)
+            ->setGrabOptions($grabOptions);
 
         return $grabEvent;
 

@@ -15,11 +15,18 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use KpGrab\Event\Grab as GrabEvent;
 
+/**
+ * Class Grab
+ * @package KpGrab\Service\Invokable
+ */
 class Grab implements ServiceLocatorAwareInterface, EventManagerAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use EventManagerAwareTrait;
 
+    /**
+     * @var array
+     */
     protected $triggerEvents = [
         GrabEvent::GRAB_PRE,
         GrabEvent::GRAB_ANALYSIS_PAGE,
@@ -29,6 +36,9 @@ class Grab implements ServiceLocatorAwareInterface, EventManagerAwareInterface
         GrabEvent::GRAB_POST
     ];
 
+    /**
+     * run
+     */
     public function run()
     {
         /* @var $grabEvent \KpGrab\Event\Grab */

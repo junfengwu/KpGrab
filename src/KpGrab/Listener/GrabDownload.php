@@ -17,21 +17,28 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use KpGrab\Exception\RuntimeException;
 use KpGrab\Tools\Uri;
 
-class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInterface
+/**
+ * Class GrabDownload
+ * @package KpGrab\Listener
+ */
+class GrabDownload implements ListenerAggregateInterface
 {
-    use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
 
+    /**
+     * @param EventManagerInterface $events
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_DOWNLOAD, [$this, 'runDownload']);
     }
 
+    /**
+     * @param GrabEvent $event
+     */
     public function runDownload(GrabEvent $event)
     {
 
@@ -42,7 +49,6 @@ class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInt
 
         $saveDir = $request->getParam('save-dir');
         $saveName = $request->getParam('save-name');
-
 
         $downloadList = array_merge($grabResult->getGrabPageUrl(), $grabResult->getGrabStaticUrl());
 
@@ -80,7 +86,7 @@ class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInt
                 $content = Html::format($content);
             }
 
-            file_put_contents($downloadSaveDir . '/' . $fileName, $response->getContent());
+            file_put_contents($downloadSaveDir . '/' . $fileName, $content);
 
         }
 

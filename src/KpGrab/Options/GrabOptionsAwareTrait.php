@@ -9,15 +9,29 @@
 
 namespace KpGrab\Options;
 
+/**
+ * Class GrabOptionsAwareTrait
+ * @package KpGrab\Options
+ */
 trait GrabOptionsAwareTrait
 {
+    /**
+     * @var Grab
+     */
     protected $grabOptions;
 
+    /**
+     * @return Grab
+     */
     public function getGrabOptions()
     {
         return $this->grabOptions;
     }
 
+    /**
+     * @param Grab $grabOptions
+     * @return $this
+     */
     public function setGrabOptions(Grab $grabOptions)
     {
         $this->grabOptions = $grabOptions;

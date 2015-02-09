@@ -12,40 +12,54 @@ namespace KpGrab\Listener;
 use KpGrab\Event\Grab as GrabEvent;
 use KpGrab\Tools\Uri;
 use Zend\Dom\Document;
-use Zend\EventManager\EventInterface;
+use Zend\Http\Response;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 
+/**
+ * Class GrabAnalysisStatic
+ * @package KpGrab\Listener
+ */
 class GrabAnalysisStatic implements ListenerAggregateInterface, ServiceLocatorAwareInterface, EventManagerAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
     use EventManagerAwareTrait;
 
+    /**
+     * @var array
+     */
     protected $hasUrlElements = [
         ['element' => 'link', 'attribute' => 'href'],
         ['element' => 'script', 'attribute' => 'src'],
         ['element' => 'img', 'attribute' => 'src']
     ];
 
+    /**
+     * @var array
+     */
     protected $analyzedStaticUrl = [];
 
+    /**
+     * @param EventManagerInterface $events
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_ANALYSIS_STATIC, [$this, 'runAnalysis']);
     }
 
 
-    public function runAnalysis(EventInterface $event)
+    /**
+     * @param GrabEvent $event
+     */
+    public function runAnalysis(GrabEvent $event)
     {
-        /* @var $event \KpGrab\Event\Grab */
         $grabHttpClient = $event->getGrabHttpClient();
         $grabResult = $event->getGrabResult();
         $grabOptions = $event->getGrabOptions();

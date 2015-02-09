@@ -9,19 +9,12 @@
 
 namespace KpGrab\Controller;
 
-use KpGrab\Event\Grab;
 use Zend\Mvc\Controller\AbstractActionController;
-
 
 class Site extends AbstractActionController
 {
-
     public function indexAction()
     {
-
         $this->serviceLocator->get('Grab')->run();
-        exit;
-
-
     }
 }

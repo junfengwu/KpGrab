@@ -15,21 +15,33 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Console\Adapter\AdapterInterface;
 
+/**
+ * Class Module
+ * @package KpGrab
+ */
 class Module implements ConfigProviderInterface,
     AutoloaderProviderInterface,
     ServiceProviderInterface,
     BootstrapListenerInterface,
     ConsoleBannerProviderInterface,
-    ConsoleUsageProviderInterface
+    ConsoleUsageProviderInterface,
+    ControllerProviderInterface
 {
+    /**
+     * @return mixed
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return [
@@ -41,6 +53,21 @@ class Module implements ConfigProviderInterface,
         ];
     }
 
+    /**
+     * @return array
+     */
+    public function getControllerConfig()
+    {
+        return [
+            'invokables' => [
+                'KpGrab\Controller\Site' => 'KpGrab\Controller\Site'
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function getServiceConfig()
     {
         return [
@@ -63,11 +90,19 @@ class Module implements ConfigProviderInterface,
         ];
     }
 
+    /**
+     * @param AdapterInterface $console
+     * @return string
+     */
     public function getConsoleBanner(AdapterInterface $console)
     {
         return "KpGrab Module 0.0.1,http://www.kittencup.com";
     }
 
+    /**
+     * @param AdapterInterface $console
+     * @return array
+     */
     public function getConsoleUsage(AdapterInterface $console)
     {
         return [
@@ -78,6 +113,10 @@ class Module implements ConfigProviderInterface,
         ];
     }
 
+    /**
+     * @param EventInterface $e
+     * @return array
+     */
     public function onBootstrap(EventInterface $e)
     {
 

@@ -9,6 +9,10 @@
 
 namespace KpGrab\Exception;
 
+/**
+ * Class InvalidArgumentException
+ * @package KpGrab\Exception
+ */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

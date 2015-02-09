@@ -14,9 +14,17 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
+/**
+ * Class GrabHttpClient
+ * @package KpGrab\Service\Factory
+ */
 class GrabHttpClient implements FactoryInterface
 {
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Client
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 

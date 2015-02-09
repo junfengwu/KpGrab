@@ -8,6 +8,10 @@
  */
 namespace KpGrab\Exception;
 
+/**
+ * Interface ExceptionInterface
+ * @package KpGrab\Exception
+ */
 interface ExceptionInterface
 {
 }

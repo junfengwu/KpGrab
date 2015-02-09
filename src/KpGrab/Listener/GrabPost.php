@@ -39,7 +39,6 @@ class GrabPost implements ListenerAggregateInterface
 
         $errorFileSaveDir = $saveDir . '/' . $saveName;
 
-
         if (!is_dir($errorFileSaveDir)) {
             mkdir($errorFileSaveDir, 0777, true);
             chmod($errorFileSaveDir, 0777);

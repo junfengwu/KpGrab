@@ -10,41 +10,58 @@
 namespace KpGrab\Listener;
 
 use KpGrab\Event\Grab as GrabEvent;
-
 use KpGrab\Result\MessageInterface;
 use KpGrab\Tools\Uri;
+use KpGrab\Exception\RuntimeException;
 use Zend\Dom\Document;
+use Zend\Http\Response;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-
-use KpGrab\Exception\RuntimeException;
 
 
-class GrabAnalysisPage implements ListenerAggregateInterface, ServiceLocatorAwareInterface
+/**
+ * Class GrabAnalysisPage
+ * @package KpGrab\Listener
+ */
+class GrabAnalysisPage implements ListenerAggregateInterface
 {
-    use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
 
+    /**
+     * @var array
+     */
     protected $alreadyAnalyzedPageUrl = [];
+    /**
+     * @var array
+     */
     protected $readyAnalyzedPageUrl = [];
+    /**
+     * @var array
+     */
     protected $errorAnalyzedPageUrl = [];
 
+    /**
+     * @var array
+     */
     protected $hasUrlElements = [
         ['element' => 'a', 'attribute' => 'href'],
         ['element' => 'form', 'attribute' => 'action']
     ];
 
 
+    /**
+     * @param EventManagerInterface $events
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_ANALYSIS_PAGE, [$this, 'runAnalysis']);
     }
 
+    /**
+     * @param EventInterface $event
+     */
     public function runAnalysis(EventInterface $event)
     {
         /* @var $event \KpGrab\Event\Grab */
@@ -88,7 +105,6 @@ class GrabAnalysisPage implements ListenerAggregateInterface, ServiceLocatorAwar
                     }
                 }
             }
-
 
             $urlInfo = Uri::parseAbsoluteUrl($url);
 

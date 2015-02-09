@@ -9,6 +9,10 @@
 
 namespace KpGrab\Exception;
 
+/**
+ * Class RuntimeException
+ * @package KpGrab\Exception
+ */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }

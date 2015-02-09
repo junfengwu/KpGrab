@@ -8,22 +8,6 @@
  */
 
 return [
-
-    'router' => [
-        'routes' => [
-            'home' => [
-                'type' => 'Literal',
-                'options' => [
-                    'route' => '/grabSite',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'KpGrab\Controller',
-                        'controller' => 'Site',
-                        'action' => 'index',
-                    ),
-                ]
-            ]
-        ]
-    ],
     'console' => [
         'router' => [
             'routes' => [
@@ -40,19 +24,6 @@ return [
             ]
         ]
     ],
-
-    'controllers' => [
-        'invokables' => [
-            'KpGrab\Controller\Site' => 'KpGrab\Controller\Site'
-        ]
-    ],
-    'view_manager' => [
-        'template_path_stack' => [
-            __DIR__ . '/../view',
-        ],
-
-    ],
-
     'kp_grab' => [
         'http_adapter' => 'Zend\Http\Client\Adapter\Curl',
         'http_adapter_options' => [
@@ -62,7 +33,7 @@ return [
                 //CURLOPT_COOKIE=>"Cookie:safedog-flow-item=;",
                 CURLOPT_TIMEOUT => 20,
                 CURLOPT_NOSIGNAL => 1,
-                CURLOPT_USERAGENT =>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36'
+                CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36'
             ]
         ],
         'console_error_message_color' => \Zend\Console\ColorInterface::RED,

@@ -9,9 +9,14 @@
 
 namespace KpGrab\Result;
 
+use KpGrab\Exception\ExceptionInterface;
 use Zend\Console\ColorInterface;
 use Zend\Console\Adapter\AdapterInterface;
 
+/**
+ * Interface MessageInterface
+ * @package KpGrab\Result
+ */
 interface MessageInterface
 {
     const DEFAULT_CONSOLE_COLOR = ColorInterface::WHITE;
@@ -25,12 +30,28 @@ interface MessageInterface
     const ERROR_CONNECT_CODE_MESSAGE = '[%s]页面连接错误状态码为:[%d]';
     const ERROR_UNKNOWN_MESSAGE = '[%s]未知错误:[%s]';
 
+    /**
+     * @param AdapterInterface $console
+     * @return $this
+     */
     public function setConsole(AdapterInterface $console);
 
+    /**
+     * @return AdapterInterface
+     */
     public function getConsole();
 
+    /**
+     * @param $message ExceptionInterface|string
+     * @param string $eventName
+     * @param bool $isExit
+     * @return $this
+     */
     public function setMessage($message, $eventName, $isExit = false);
 
+    /**
+     * @return array
+     */
     public function getMessages();
 
 }

@@ -13,19 +13,33 @@ use KpGrab\Exception\ExceptionInterface;
 use Zend\Console\Adapter\AdapterInterface;
 use KpGrab\Options\Grab as GrabOptions;
 
+/**
+ * Class Grab
+ * @package KpGrab\Result
+ */
 class Grab implements MessageInterface
 {
+    /**
+     * @var array
+     */
     protected $messages = [];
+    /**
+     * @var array
+     */
     protected $grabPageUrl = [];
+    /**
+     * @var array
+     */
     protected $grabStaticUrl = [];
-
 
     /**
      * @var \KpGrab\Options\Grab
      */
     protected $grabOptions;
+    /**
+     * @var AdapterInterface
+     */
     protected $console;
-
 
     /**
      * @return array
@@ -60,29 +74,48 @@ class Grab implements MessageInterface
     }
 
 
-
+    /**
+     * @return GrabOptions
+     */
     public function getGrabOptions()
     {
         return $this->grabOptions;
     }
 
+    /**
+     * @param GrabOptions $grabOptions
+     * @return $this
+     */
     public function setGrabOptions(GrabOptions $grabOptions)
     {
         $this->grabOptions = $grabOptions;
         return $this;
     }
 
+    /**
+     * @param AdapterInterface $console
+     * @return $this
+     */
     public function setConsole(AdapterInterface $console)
     {
         $this->console = $console;
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getConsole()
     {
         return $this->console;
     }
 
+    /**
+     * @param $message
+     * @param $eventName
+     * @param bool $isExit
+     * @return $this
+     */
     public function setMessage($message, $eventName, $isExit = false)
     {
 
@@ -108,6 +141,9 @@ class Grab implements MessageInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getMessages()
     {
         return $this->messages;

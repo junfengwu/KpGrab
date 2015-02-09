@@ -19,19 +19,37 @@ use KpGrab\Exception\RuntimeException;
 use Zend\Http\Exception\InvalidArgumentException as ZendHttpInvalidArgumentException;
 use KpGrab\Exception\InvalidArgumentException;
 
+/**
+ * Class Client
+ * @package KpGrab\Http
+ */
 class Client extends ZendClient implements GrabOptionsAwareInterface
 {
     use GrabOptionsAwareTrait;
 
+    /**
+     * @var Grab;
+     */
     protected $grabResult;
+    /**
+     * @var int
+     */
     protected $reconnectionCount = 1;
 
+    /**
+     * @param Grab $grabResult
+     * @return $this
+     */
     public function setGrabResult(Grab $grabResult)
     {
         $this->grabResult = $grabResult;
         return $this;
     }
 
+    /**
+     * @param $eventName
+     * @return bool|\Zend\Http\Response
+     */
     public function canReconnectionSend($eventName)
     {
 
@@ -45,7 +63,7 @@ class Client extends ZendClient implements GrabOptionsAwareInterface
             } else {
                 $this->grabResult->setMessage(new RuntimeException(sprintf(MessageInterface::ERROR_CONNECT_FAIL_MESSAGE, $this->getUri(), $this->reconnectionCount)), $eventName);
             }
-        }catch (ZendHttpInvalidArgumentException $e) {
+        } catch (ZendHttpInvalidArgumentException $e) {
             $this->grabResult->setMessage(new InvalidArgumentException(sprintf(MessageInterface::ERROR_UNKNOWN_MESSAGE, $this->getUri(), $e->getMessage())), $eventName);
         }
 

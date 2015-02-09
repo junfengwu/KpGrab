@@ -9,11 +9,22 @@
 
 namespace KpGrab\Tools;
 
+/**
+ * Class Uri
+ * @package KpGrab\Tools
+ */
 class Uri
 {
 
+    /**
+     * @var \Zend\Validator\Uri
+     */
     protected static $uriValidator;
 
+    /**
+     * @param $url
+     * @return array
+     */
     public static function parseAbsoluteUrl($url)
     {
 
@@ -41,6 +52,10 @@ class Uri
 
     }
 
+    /**
+     * @param $url
+     * @return string
+     */
     public static function getRealUrl($url)
     {
         $urlInfo = parse_url($url);
@@ -72,11 +87,62 @@ class Uri
     }
 
 
+    /**
+     * @param $url
+     * @return bool
+     */
     public static function isAbsoluteUrl($url)
     {
-        if(!Static::$uriValidator) {
+        if (!Static::$uriValidator) {
             Static::$uriValidator = new \Zend\Validator\Uri(['allowRelative' => false]);
         }
         return Static::$uriValidator->isValid($url);
+    }
+
+
+    /**
+     * @param $text
+     * @return array
+     */
+    public static function getCssUrl($text)
+    {
+        $urls = [];
+
+        $url_pattern = '(([^\\\\\'", \(\)]*(\\\\.)?)+)';
+        $urlfunc_pattern = 'url\(\s*[\'"]?' . $url_pattern . '[\'"]?\s*\)';
+        $pattern = '/(' .
+            '(@import\s*[\'"]' . $url_pattern . '[\'"])' .
+            '|(@import\s*' . $urlfunc_pattern . ')' .
+            '|(' . $urlfunc_pattern . ')' . ')/iu';
+        if (!preg_match_all($pattern, $text, $matches))
+            return $urls;
+
+
+        $urls['import'] = [];
+        $urls['image'] = [];
+        // @import '...'
+        // @import "..."
+        foreach ($matches[3] as $match)
+            if (!empty($match))
+                $urls['import'][] =
+                    preg_replace('/\\\\(.)/u', '\\1', $match);
+
+        // @import url(...)
+        // @import url('...')
+        // @import url("...")
+        foreach ($matches[7] as $match)
+            if (!empty($match))
+                $urls['import'][] =
+                    preg_replace('/\\\\(.)/u', '\\1', $match);
+
+        // url(...)
+        // url('...')
+        // url("...")
+        foreach ($matches[11] as $match)
+            if (!empty($match))
+                $urls['image'][] =
+                    preg_replace('/\\\\(.)/u', '\\1', $match);
+
+        return array_merge($urls['image'], $urls['import']);
     }
 }

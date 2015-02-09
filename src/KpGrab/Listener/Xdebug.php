@@ -28,18 +28,26 @@ use Zend\Uri\UriFactory;
 use Zend\Http\Client\Adapter\Exception\RuntimeException;
 use Zend\Validator\Uri;
 
+/**
+ * Class Xdebug
+ * @package KpGrab\Listener
+ */
 class Xdebug implements ListenerAggregateInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
 
-
+    /**
+     * @param EventManagerInterface $events
+     */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->getSharedManager()->attach('*', MvcEvent::EVENT_DISPATCH, [$this, 'setMaxNestingLevel'] ,999);
+        $this->listeners[] = $events->getSharedManager()->attach('*', MvcEvent::EVENT_DISPATCH, [$this, 'setMaxNestingLevel'], 999);
     }
 
-
+    /**
+     * @param EventInterface $event
+     */
     public function setMaxNestingLevel(EventInterface $event)
     {
         $grabOptions = $this->serviceLocator->get('GrabOptions');

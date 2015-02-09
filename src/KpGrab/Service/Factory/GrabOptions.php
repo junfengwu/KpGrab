@@ -14,9 +14,17 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
+/**
+ * Class GrabOptions
+ * @package KpGrab\Service\Factory
+ */
 class GrabOptions implements FactoryInterface
 {
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Grab
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 

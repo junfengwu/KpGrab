@@ -9,8 +9,18 @@
 
 namespace KpGrab\Tools;
 
+/**
+ * Class Html
+ * @package KpGrab\Tools
+ */
 class Html
 {
+    /**
+     * @param $html
+     * @param string $indentWith
+     * @param string $tagsWithoutIndentation
+     * @return string
+     */
     public static function format($html, $indentWith = '    ', $tagsWithoutIndentation = 'html,link,img,meta')
     {
         $html = str_replace(["\n", "\r", "\t"], ['', '', ' '], $html);
@@ -43,6 +53,10 @@ class Html
         return trim(implode('', $output));
     }
 
+    /**
+     * @param array $elements
+     * @return array
+     */
     public static function parseDom(Array $elements)
     {
         $dom = array();
