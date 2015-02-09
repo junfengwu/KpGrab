@@ -10,10 +10,10 @@
 namespace KpGrab\Options;
 
 /**
- * Class GrabOptionsAwareTrait
+ * Class GrabTrait
  * @package KpGrab\Options
  */
-trait GrabOptionsAwareTrait
+trait GrabTrait
 {
     /**
      * @var Grab

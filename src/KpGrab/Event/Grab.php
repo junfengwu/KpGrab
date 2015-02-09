@@ -9,17 +9,16 @@
 
 namespace KpGrab\Event;
 
-use KpGrab\Options\GrabOptionsAwareInterface;
-use KpGrab\Options\GrabOptionsAwareTrait;
+use KpGrab\Options\GrabTrait;
 use Zend\EventManager\Event;
 
 /**
  * Class Grab
  * @package KpGrab\Event
  */
-class Grab extends Event implements GrabOptionsAwareInterface
+class Grab extends Event
 {
-    use GrabOptionsAwareTrait;
+    use GrabTrait;
 
     /**
      * Grab events

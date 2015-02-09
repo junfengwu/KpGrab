@@ -82,9 +82,12 @@ class GrabDownload implements ListenerAggregateInterface
 
             $content = $response->getContent();
 
-            if (in_array($urlInfo['extension'], $grabOptions->getGrabAllowPageSuffix())) {
-                $content = Html::format($content);
-            }
+            /**
+             * @todo need format html,css,js
+             */
+//            if (in_array($urlInfo['extension'], $grabOptions->getGrabAllowPageSuffix())) {
+//                $content = Html::format($content);
+//            }
 
             file_put_contents($downloadSaveDir . '/' . $fileName, $content);
 

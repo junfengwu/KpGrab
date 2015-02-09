@@ -9,8 +9,7 @@
 
 namespace KpGrab\Http;
 
-use KpGrab\Options\GrabOptionsAwareInterface;
-use KpGrab\Options\GrabOptionsAwareTrait;
+use KpGrab\Options\GrabTrait;
 use KpGrab\Result\Grab;
 use KpGrab\Result\MessageInterface;
 use Zend\Http\Client as ZendClient;
@@ -23,9 +22,9 @@ use KpGrab\Exception\InvalidArgumentException;
  * Class Client
  * @package KpGrab\Http
  */
-class Client extends ZendClient implements GrabOptionsAwareInterface
+class Client extends ZendClient
 {
-    use GrabOptionsAwareTrait;
+    use GrabTrait;
 
     /**
      * @var Grab;
