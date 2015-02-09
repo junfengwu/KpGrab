@@ -1,0 +1,15 @@
+{
+    "name": "zendframework/kp-http",
+    "description": "KpGrab是一个基于Zend Framweork 2模块，主要功能是抓取整站静态页面",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "http",
+        "grab",
+        "kittencup"
+    ],
+    "homepage": "http://www.kittencup.com",
+    "require": {
+        "php": ">=5.3.23"
+    }
+}
