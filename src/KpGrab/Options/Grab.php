@@ -37,6 +37,42 @@ class Grab extends AbstractOptions
 
     protected $defaultSaveDir;
 
+    protected $grabAllowPageSuffix;
+
+    protected $grabAllowStaticSuffix;
+
+    /**
+     * @return mixed
+     */
+    public function getGrabAllowStaticSuffix()
+    {
+        return $this->grabAllowStaticSuffix;
+    }
+
+    /**
+     * @param mixed $grabAllowStaticSuffix
+     */
+    public function setGrabAllowStaticSuffix($grabAllowStaticSuffix)
+    {
+        $this->grabAllowStaticSuffix = $grabAllowStaticSuffix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrabAllowPageSuffix()
+    {
+        return $this->grabAllowPageSuffix;
+    }
+
+    /**
+     * @param mixed $grabAllowPageSuffix
+     */
+    public function setGrabAllowPageSuffix($grabAllowPageSuffix)
+    {
+        $this->grabAllowPageSuffix = $grabAllowPageSuffix;
+    }
+
     /**
      * @return mixed
      */
@@ -61,9 +97,7 @@ class Grab extends AbstractOptions
         return $this->xdebugMaxNestingLevel;
     }
 
-    /**
-     * @param mixed $xdebugMaxNestingLevel
-     */
+
     public function setXdebugMaxNestingLevel($xdebugMaxNestingLevel)
     {
         $this->xdebugMaxNestingLevel = $xdebugMaxNestingLevel;
@@ -77,9 +111,6 @@ class Grab extends AbstractOptions
         return $this->maxReconnectionCount;
     }
 
-    /**
-     * @param mixed $maxReconnectionCount
-     */
     public function setMaxReconnectionCount($maxReconnectionCount)
     {
         $this->maxReconnectionCount = $maxReconnectionCount;

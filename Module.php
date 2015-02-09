@@ -39,17 +39,20 @@ class Module implements ConfigProviderInterface,
     {
         return [
             'invokables' => [
-                'GrabAnalysisSite' => 'KpGrab\Service\Invokable\AnalysisSite',
-                'AnalysisSitePageListener' => 'KpGrab\Listener\AnalysisSitePage',
-                'AnalysisSiteStaticListener' => 'KpGrab\Listener\AnalysisSiteStatic',
-                'AnalysisSiteCss'=>'KpGrab\Listener\AnalysisSiteCss',
-                'SiteDownloadListener' => 'KpGrab\Listener\SiteDownload',
-                'XdebugListener' => 'KpGrab\Listener\Xdebug'
+//
+//                'SiteDownloadListener' => 'KpGrab\Listener\SiteDownload',
+                'XdebugListener' => 'KpGrab\Listener\Xdebug',
+                'Grab' => 'KpGrab\Service\Invokable\Grab',
+                'GrabPreListener' => 'KpGrab\Listener\GrabPre',
+                'GrabAnalysisPageListener' => 'KpGrab\Listener\GrabAnalysisPage',
+                'GrabAnalysisStaticListener' => 'KpGrab\Listener\GrabAnalysisStatic',
+                'GrabAnalysisCssListener'=>'KpGrab\Listener\GrabAnalysisCss',
             ],
             'factories' => [
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
                 'GrabHttpClient' => 'KpGrab\Service\Factory\GrabHttpClient',
                 'GrabEvent' => 'KpGrab\Service\Factory\GrabEvent',
+                'GrabResult' => 'KpGrab\Service\Factory\GrabResult'
             ]
         ];
     }
@@ -77,10 +80,11 @@ class Module implements ConfigProviderInterface,
             $eventManager->attach($serviceManager->get('XdebugListener'));
         }
 
-        $eventManager->attach($serviceManager->get('AnalysisSitePageListener'));
-        $eventManager->attach($serviceManager->get('AnalysisSiteStaticListener'));
-        $eventManager->attach($serviceManager->get('AnalysisSiteCss'));
-        $eventManager->attach($serviceManager->get('SiteDownloadListener'));
+        $eventManager->attach($serviceManager->get('GrabPreListener'));
+        $eventManager->attach($serviceManager->get('GrabAnalysisPageListener'));
+        $eventManager->attach($serviceManager->get('GrabAnalysisStaticListener'));
+        $eventManager->attach($serviceManager->get('GrabAnalysisCssListener'));
+//      $eventManager->attach($serviceManager->get('SiteDownloadListener'));
     }
 
 }

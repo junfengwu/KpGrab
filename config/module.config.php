@@ -28,7 +28,7 @@ return [
             'routes' => [
                 'grab_site' => [
                     'options' => [
-                        'route' => 'grab site <url> [--saveDir=]',
+                        'route' => 'grab site <url> [--save-dir=]',
                         'defaults' => [
                             '__NAMESPACE__' => 'KpGrab\Controller',
                             'controller' => 'Site',
@@ -58,6 +58,7 @@ return [
             'curloptions' => [
                 CURLOPT_ENCODING => 'gzip',
                 CURLOPT_FOLLOWLOCATION => false,
+
                 CURLOPT_TIMEOUT => 20,
                 CURLOPT_NOSIGNAL => 1
             ]
@@ -67,7 +68,9 @@ return [
         'show_message' => true,
         'max_reconnection_count' => 5,
         'xdebug_max_nesting_level' => 600,
-        'default_save_dir'=> realpath(__DIR__ . '/../data')
+        'default_save_dir'=> realpath(__DIR__ . '/../data'),
+        'grab_allow_page_suffix'=>['html'],
+        'grab_allow_static_suffix'=>['png','jpeg','jpg','gif','css','js']
     ]
 
 ];

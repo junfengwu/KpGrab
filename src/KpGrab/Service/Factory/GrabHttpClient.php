@@ -9,7 +9,7 @@
 
 namespace KpGrab\Service\Factory;
 
-use Zend\Http\Client;
+use KpGrab\Http\Client;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,15 +20,16 @@ class GrabHttpClient implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
-        $themeForestOptions = $serviceLocator->get('GrabOptions');
+        $grabOptions = $serviceLocator->get('GrabOptions');
+        $grabResult = $serviceLocator->get('GrabResult');
 
-        $adapterClass = $themeForestOptions->getHttpAdapter();
+        $adapterClass = $grabOptions->getHttpAdapter();
         $adapter = new $adapterClass;
-
-        $adapter->setOptions($themeForestOptions->getHttpAdapterOptions());
+        $adapter->setOptions($grabOptions->getHttpAdapterOptions());
 
         $client = new Client();
-        $client->setAdapter($adapter);
+        $client->setGrabOptions($grabOptions)->setGrabResult($grabResult)->setAdapter($adapter);
+
 
         return $client;
 

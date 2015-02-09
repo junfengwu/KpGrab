@@ -28,7 +28,7 @@ use Zend\Validator\Uri;
 /**
  *
  * http://nadeausoftware.com/articles/2008/01/php_tip_how_extract_urls_web_page
- * php public/index.php grab site http://admindesigns.com/framework/dashboard.html --saveDir=/Users/huangzhengjia/WebServer/zf2/data
+ * php public/index.php grab site http://admindesigns.com/framework/dashboard.html --save-dir=/Users/huangzhengjia/WebServer/zf2/data
  * Class AnalysisSitePage
  * @package KpGrab\Listener
  */

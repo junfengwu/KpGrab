@@ -20,27 +20,23 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class GrabEvent implements FactoryInterface
 {
-
     /**
      * @param ServiceLocatorInterface $serviceLocator
      * @return \KpGrab\Event\Grab
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-
         $grabOptions = $serviceLocator->get('GrabOptions');
         $request = $serviceLocator->get('Request');
         $httpClient = $serviceLocator->get('GrabHttpClient');
-        $console = $serviceLocator->get('Console');
+        $grabResult = $serviceLocator->get('GrabResult');
 
-        /* @var $grabEvent \KpGrab\Event\Grab */
         $grabEvent = new Grab();
 
-        $grabEvent->setConsole($console)
-                  ->setRequest($request)
-                  ->setHttpClient($httpClient)
-                  ->setGrabOptions($grabOptions)
-                  ->setServiceLocator($serviceLocator);
+        $grabEvent->setRequest($request)
+                  ->setGrabHttpClient($httpClient)
+                  ->setGrabResult($grabResult)
+                  ->setGrabOptions($grabOptions);
 
         return $grabEvent;
 

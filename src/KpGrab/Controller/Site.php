@@ -19,12 +19,7 @@ class Site extends AbstractActionController
     public function indexAction()
     {
 
-        /* @var $grabEvent \KpGrab\Event\Grab */
-        $grabEvent = $this->serviceLocator->get('GrabEvent');
-        $this->events->trigger(Grab::ANALYSIS_SITE_PAGE, $grabEvent);
-        $this->events->trigger(Grab::ANALYSIS_SITE_STATIC, $grabEvent);
-        $this->events->trigger(Grab::ANALYSIS_SITE_CSS, $grabEvent);
-        $this->events->trigger(Grab::SITE_DOWNLOAD, $grabEvent);
+        $this->serviceLocator->get('Grab')->run();
         exit;
 
 
