@@ -2,8 +2,13 @@
 --------
 KpGrab是一个基于Zend Framweork 2模块，主要功能是抓取整站静态页面
 
-2.使用
+2.安装
 --------
+[github下载](https://github.com/h112367/KpGrab.git)，放入zf2 module文件夹里，application.config.php添加KpGrab模块
+
+3.使用
+--------
+
 ```
 php public/index.php grab site <url> [--save-dir=] [--save-name=]
 ```
@@ -17,14 +22,14 @@ php public/index.php grab site <url> [--save-dir=] [--save-name=]
 php public/index.php grab site http://admindesigns.com/framework/dashboard.html  --save-dir=/Users/Kittencup/WebServer/zf2/data --save-name=admindesigns
 ```
 
-3.配置
+4.配置
 --------
 具体的配置内容在KpGrab/config/module.config.php内，使用kp_grab键值
 
 * http_adapter => (String) 使用http连接方式
 * http_adapter_options => (Array) http连接方式的选项
 * console_error_message_color => (Int) 控制台报错信息的颜色,使用Zend\Console\ColorInterface内常量
-* show_message => (bool) 显示抓取具体信息
+* show_message => (bool) 显示抓取具体信息 
 * max_reconnection_count => (int) 连接失败重新连接次数
 * default_save_dir => (String) 默认的保存文件夹
 * grab_allow_page_suffix => (Array) 允许抓取的页面后缀
