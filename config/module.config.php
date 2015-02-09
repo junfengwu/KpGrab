@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2014-2015 Kittencup. (http://www.kittencup.com)
  * @license   http://kittencup.com
  */
+
 return [
 
     'router' => [
@@ -58,9 +59,10 @@ return [
             'curloptions' => [
                 CURLOPT_ENCODING => 'gzip',
                 CURLOPT_FOLLOWLOCATION => false,
-
+                //CURLOPT_COOKIE=>"Cookie:safedog-flow-item=;",
                 CURLOPT_TIMEOUT => 20,
-                CURLOPT_NOSIGNAL => 1
+                CURLOPT_NOSIGNAL => 1,
+                CURLOPT_USERAGENT =>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36'
             ]
         ],
         'console_error_message_color' => \Zend\Console\ColorInterface::RED,

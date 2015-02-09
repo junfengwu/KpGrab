@@ -34,6 +34,7 @@ class Client extends ZendClient implements GrabOptionsAwareInterface
 
     public function canReconnectionSend($eventName)
     {
+
         $response = false;
         try {
             $response = parent::send();
@@ -44,7 +45,7 @@ class Client extends ZendClient implements GrabOptionsAwareInterface
             } else {
                 $this->grabResult->setMessage(new RuntimeException(sprintf(MessageInterface::ERROR_CONNECT_FAIL_MESSAGE, $this->getUri(), $this->reconnectionCount)), $eventName);
             }
-        } catch (ZendHttpInvalidArgumentException $e) {
+        }catch (ZendHttpInvalidArgumentException $e) {
             $this->grabResult->setMessage(new InvalidArgumentException(sprintf(MessageInterface::ERROR_UNKNOWN_MESSAGE, $this->getUri(), $e->getMessage())), $eventName);
         }
 

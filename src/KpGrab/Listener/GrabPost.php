@@ -37,17 +37,24 @@ class GrabPost implements ListenerAggregateInterface
 
         $grabOptions = $event->getGrabOptions();
 
-        $errorFileSaveDir = $saveDir . '/' . $saveName . '/' . $grabOptions->getOutputErrorFilename();
+        $errorFileSaveDir = $saveDir . '/' . $saveName;
+
+
+        if (!is_dir($errorFileSaveDir)) {
+            mkdir($errorFileSaveDir, 0777, true);
+            chmod($errorFileSaveDir, 0777);
+        }
 
         $errorMessages = $grabResult->getMessages();
 
         $errorMessageStr = '';
 
-        foreach ($errorMessages[MessageInterface::ERROR_MESSAGE] as $errorMessage) {
-            $errorMessageStr .= $errorMessage['event'] . '-' . $errorMessage['message'] . '-' . date('Y-m-d:H:i:s', $errorMessage['time']) . PHP_EOL;
+        if (isset($errorMessages[MessageInterface::ERROR_MESSAGE])) {
+            foreach ($errorMessages[MessageInterface::ERROR_MESSAGE] as $errorMessage) {
+                $errorMessageStr .= $errorMessage['event'] . '-' . $errorMessage['message'] . '-' . date('Y-m-d:H:i:s', $errorMessage['time']) . PHP_EOL;
+            }
         }
-
-        file_put_contents($errorFileSaveDir, $errorMessageStr);
+        file_put_contents($errorFileSaveDir . '/' . $grabOptions->getOutputErrorFilename(), $errorMessageStr);
     }
 
 }

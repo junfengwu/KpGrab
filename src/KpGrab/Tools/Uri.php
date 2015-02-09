@@ -9,8 +9,10 @@
 
 namespace KpGrab\Tools;
 
-class Uri{
+class Uri
+{
 
+    protected static $uriValidator;
 
     public static function parseAbsoluteUrl($url)
     {
@@ -70,10 +72,11 @@ class Uri{
     }
 
 
-    public static function isAbsoluteUrl($url){
-
-        $uriValidator = new \Zend\Validator\Uri(['allowRelative' => false]);
-
-        return $uriValidator->isValid($url);
+    public static function isAbsoluteUrl($url)
+    {
+        if(!Static::$uriValidator) {
+            Static::$uriValidator = new \Zend\Validator\Uri(['allowRelative' => false]);
+        }
+        return Static::$uriValidator->isValid($url);
     }
 }
