@@ -70,7 +70,7 @@ return [
         'xdebug_max_nesting_level' => 600,
         'default_save_dir'=> realpath(__DIR__ . '/../data'),
         'grab_allow_page_suffix'=>['html'],
-        'grab_allow_static_suffix'=>['png','jpeg','jpg','gif','css','js']
+        'grab_allow_static_suffix'=>['png','jpeg','jpg','gif','css','js','woff','ttf','eot','svg']
     ]
 
 ];

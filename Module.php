@@ -39,14 +39,13 @@ class Module implements ConfigProviderInterface,
     {
         return [
             'invokables' => [
-//
-//                'SiteDownloadListener' => 'KpGrab\Listener\SiteDownload',
                 'XdebugListener' => 'KpGrab\Listener\Xdebug',
                 'Grab' => 'KpGrab\Service\Invokable\Grab',
                 'GrabPreListener' => 'KpGrab\Listener\GrabPre',
                 'GrabAnalysisPageListener' => 'KpGrab\Listener\GrabAnalysisPage',
                 'GrabAnalysisStaticListener' => 'KpGrab\Listener\GrabAnalysisStatic',
                 'GrabAnalysisCssListener'=>'KpGrab\Listener\GrabAnalysisCss',
+                'GrabDownloadListener' => 'KpGrab\Listener\GrabDownload',
             ],
             'factories' => [
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
@@ -84,7 +83,7 @@ class Module implements ConfigProviderInterface,
         $eventManager->attach($serviceManager->get('GrabAnalysisPageListener'));
         $eventManager->attach($serviceManager->get('GrabAnalysisStaticListener'));
         $eventManager->attach($serviceManager->get('GrabAnalysisCssListener'));
-//      $eventManager->attach($serviceManager->get('SiteDownloadListener'));
+        $eventManager->attach($serviceManager->get('GrabDownloadListener'));
     }
 
 }

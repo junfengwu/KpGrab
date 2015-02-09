@@ -95,8 +95,8 @@ class GrabAnalysisCss implements ListenerAggregateInterface, ServiceLocatorAware
             }
 
         }
-        
-        var_dump($analyzedStaticUrl);
+
+        $grabResult->setGrabStaticUrl($analyzedStaticUrl);
     }
 
     public function getCssUrl($text)
