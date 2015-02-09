@@ -11,7 +11,6 @@ namespace KpGrab\Options;
 
 trait GrabOptionsAwareTrait
 {
-
     protected $grabOptions;
 
     public function getGrabOptions()

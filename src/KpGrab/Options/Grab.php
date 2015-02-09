@@ -26,10 +26,6 @@ class Grab extends AbstractOptions
      * @var
      */
     protected $consoleErrorMessageColor;
-    /**
-     * @var
-     */
-    protected $testUrl;
 
     protected $maxReconnectionCount;
 
@@ -40,6 +36,43 @@ class Grab extends AbstractOptions
     protected $grabAllowPageSuffix;
 
     protected $grabAllowStaticSuffix;
+
+    protected $outputError;
+
+    protected $outputErrorFilename;
+
+    /**
+     * @return mixed
+     */
+    public function getOutputErrorFilename()
+    {
+        return $this->outputErrorFilename;
+    }
+
+    /**
+     * @param mixed $outputErrorFilename
+     */
+    public function setOutputErrorFilename($outputErrorFilename)
+    {
+        $this->outputErrorFilename = $outputErrorFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutputError()
+    {
+        return $this->outputError;
+    }
+
+    /**
+     * @param mixed $outputError
+     */
+    public function setOutputError($outputError)
+    {
+        $this->outputError = $outputError;
+    }
+
 
     /**
      * @return mixed
@@ -138,21 +171,6 @@ class Grab extends AbstractOptions
      */
     protected $showMessage;
 
-    /**
-     * @return mixed
-     */
-    public function getTestUrl()
-    {
-        return $this->testUrl;
-    }
-
-    /**
-     * @param mixed $testUrl
-     */
-    public function setTestUrl($testUrl)
-    {
-        $this->testUrl = $testUrl;
-    }
 
     /**
      * @return mixed

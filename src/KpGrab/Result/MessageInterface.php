@@ -21,8 +21,9 @@ interface MessageInterface
     const ERROR_SAVE_DIR_MESSAGE = '保存路径[%s]不存在或不可写';
     const ERROR_URL_MESSAGE = '请输入一个正确的url参数';
     const ERROR_RECONNECT_MESSAGE = '[%s]页面连接失败，准备进行[%s]次重连';
-    const ERROR_CONNECT_FAIL_MESSAGE = '[%s]页面连接失败，跳过该连接';
+    const ERROR_CONNECT_FAIL_MESSAGE = '[%s]页面连接失败超过[%d]次，跳过该连接';
     const ERROR_CONNECT_CODE_MESSAGE = '[%s]页面连接错误状态码为:[%d]';
+    const ERROR_UNKNOWN_MESSAGE = '[%s]未知错误:[%s]';
 
     public function setConsole(AdapterInterface $console);
 

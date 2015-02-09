@@ -95,9 +95,11 @@ class Grab implements MessageInterface
             $color = Static::DEFAULT_CONSOLE_COLOR;
         }
 
-        $this->messages[$key][] = ['event' => $eventName, 'color' => $color, 'message' => $message, 'time' => time()];
+        $this->messages[$key][] = ['event' => $eventName,'message' => $message, 'time' => time()];
 
-        $this->console->writeLine($message,$color);
+        if($key === Static::ERROR_MESSAGE || $this->grabOptions->getShowMessage()) {
+            $this->console->writeLine($message, $color);
+        }
 
         if ($isExit) {
             exit();

@@ -29,9 +29,11 @@ class GrabPre implements ListenerAggregateInterface
     {
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_PRE, [$this, 'setSaveDir']);
         $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_PRE, [$this, 'setOrigUri']);
+        $this->listeners[] = $events->getSharedManager()->attach('*', GrabEvent::GRAB_PRE, [$this, 'setSaveName']);
     }
 
-    public function setSaveDir(EventInterface $event)
+
+    public function setSaveDir(GrabEvent $event)
     {
 
         $request = $event->getRequest();
@@ -50,14 +52,12 @@ class GrabPre implements ListenerAggregateInterface
 
     }
 
-    public function setOrigUri(EventInterface $event)
+    public function setOrigUri(GrabEvent $event)
     {
 
         $request = $event->getRequest();
 
-        $grabOptions = $event->getGrabOptions();
-
-        $url = $request->getParam('url', $grabOptions->getTestUrl());
+        $url = $request->getParam('url');
 
         $uri = UriFactory::factory($url);
 
@@ -67,6 +67,20 @@ class GrabPre implements ListenerAggregateInterface
         }
 
         $event->setOrigUri($uri);
+
+    }
+
+
+    public function setSaveName(GrabEvent $event)
+    {
+        $request = $event->getRequest();
+        $saveName = $request->getParam('save-name');
+
+        if (!$saveName) {
+            $saveName = md5(time() . $event->getOrigUri()->toString());
+        }
+
+        $request->getParams()->set('save-name', $saveName);
 
     }
 

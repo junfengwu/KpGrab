@@ -11,6 +11,8 @@ namespace KpGrab\Listener;
 
 use KpGrab\Event\Grab as GrabEvent;
 use KpGrab\Result\MessageInterface;
+use KpGrab\Tools\Html;
+use Zend\Dom\Document;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -36,13 +38,13 @@ class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInt
         $grabResult = $event->getGrabResult();
         $request = $event->getRequest();
         $grabHttpClient = $event->getGrabHttpClient();
+        $grabOptions = $event->getGrabOptions();
+
+        $saveDir = $request->getParam('save-dir');
+        $saveName = $request->getParam('save-name');
+
 
         $downloadList = array_merge($grabResult->getGrabPageUrl(), $grabResult->getGrabStaticUrl());
-        $saveDir = $request->getParam('save-dir');
-        /**
-         * @todo 可自己配置
-         */
-        $rootName = md5($event->getOrigUri()->toString());
 
         while (count($downloadList) > 0) {
 
@@ -59,10 +61,10 @@ class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInt
                 continue;
             }
 
-            $downloadSaveDir = $saveDir . '/' . $rootName;
 
             $urlInfo = Uri::parseAbsoluteUrl($url);
 
+            $downloadSaveDir = $saveDir . '/' . $saveName;
             $downloadSaveDir .= '/' . $urlInfo['path'];
 
             if (!is_dir($downloadSaveDir)) {
@@ -71,6 +73,12 @@ class GrabDownload implements ListenerAggregateInterface, ServiceLocatorAwareInt
             }
 
             $fileName = $urlInfo['filename'] . '.' . $urlInfo['extension'];
+
+            $content = $response->getContent();
+
+            if (in_array($urlInfo['extension'], $grabOptions->getGrabAllowPageSuffix())) {
+                $content = Html::format($content);
+            }
 
             file_put_contents($downloadSaveDir . '/' . $fileName, $response->getContent());
 

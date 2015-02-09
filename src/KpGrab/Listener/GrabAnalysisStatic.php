@@ -50,7 +50,6 @@ class GrabAnalysisStatic implements ListenerAggregateInterface, ServiceLocatorAw
         $grabResult = $event->getGrabResult();
         $grabOptions = $event->getGrabOptions();
 
-
         $readyAnalyzedStaticPageUrl = $grabResult->getGrabPageUrl();
 
         while (count($readyAnalyzedStaticPageUrl) > 0) {

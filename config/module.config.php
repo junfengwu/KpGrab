@@ -28,7 +28,7 @@ return [
             'routes' => [
                 'grab_site' => [
                     'options' => [
-                        'route' => 'grab site <url> [--save-dir=]',
+                        'route' => 'grab site <url> [--save-dir=] [--save-name=]',
                         'defaults' => [
                             '__NAMESPACE__' => 'KpGrab\Controller',
                             'controller' => 'Site',
@@ -64,13 +64,14 @@ return [
             ]
         ],
         'console_error_message_color' => \Zend\Console\ColorInterface::RED,
-        'test_url' => 'http://demo.themepixels.com/webpage/amanda/index.html',
         'show_message' => true,
         'max_reconnection_count' => 5,
         'xdebug_max_nesting_level' => 600,
-        'default_save_dir'=> realpath(__DIR__ . '/../data'),
-        'grab_allow_page_suffix'=>['html'],
-        'grab_allow_static_suffix'=>['png','jpeg','jpg','gif','css','js','woff','ttf','eot','svg']
+        'default_save_dir' => realpath(__DIR__ . '/../data'),
+        'grab_allow_page_suffix' => ['html'],
+        'grab_allow_static_suffix' => ['png', 'jpeg', 'jpg', 'gif', 'css', 'js', 'woff', 'ttf', 'eot', 'svg'],
+        'output_error' => true,
+        'output_error_filename' => 'error.md'
     ]
 
 ];

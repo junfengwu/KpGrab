@@ -13,11 +13,17 @@ use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\Mvc\MvcEvent;
+use Zend\Console\Adapter\AdapterInterface;
 
 class Module implements ConfigProviderInterface,
-    AutoloaderProviderInterface, ServiceProviderInterface, BootstrapListenerInterface
+    AutoloaderProviderInterface,
+    ServiceProviderInterface,
+    BootstrapListenerInterface,
+    ConsoleBannerProviderInterface,
+    ConsoleUsageProviderInterface
 {
     public function getConfig()
     {
@@ -44,8 +50,9 @@ class Module implements ConfigProviderInterface,
                 'GrabPreListener' => 'KpGrab\Listener\GrabPre',
                 'GrabAnalysisPageListener' => 'KpGrab\Listener\GrabAnalysisPage',
                 'GrabAnalysisStaticListener' => 'KpGrab\Listener\GrabAnalysisStatic',
-                'GrabAnalysisCssListener'=>'KpGrab\Listener\GrabAnalysisCss',
+                'GrabAnalysisCssListener' => 'KpGrab\Listener\GrabAnalysisCss',
                 'GrabDownloadListener' => 'KpGrab\Listener\GrabDownload',
+                'GrabPostListener' => 'KpGrab\Listener\GrabPost'
             ],
             'factories' => [
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
@@ -56,14 +63,18 @@ class Module implements ConfigProviderInterface,
         ];
     }
 
-
-    public function getViewHelperConfig()
+    public function getConsoleBanner(AdapterInterface $console)
     {
+        return "KpGrab Module 0.0.1,http://www.kittencup.com";
+    }
 
+    public function getConsoleUsage(AdapterInterface $console)
+    {
         return [
-            'invokables' => [
-
-            ]
+            'grab site <url> [--save-dir=] [--save-name=]' => '根据url抓取网站所有静态页面和静态文件',
+            ['<url>', '要抓取的网站地址,比如http://www.kittencup.com/index.html'],
+            ['--save-dir=DIR', '抓取的内容保存的目录,不填写默认根据配置提供,目录要可写'],
+            ['--save-name=NAME', '抓取的内容保存的文件夹名，不填写随机生成']
         ];
     }
 
@@ -79,11 +90,18 @@ class Module implements ConfigProviderInterface,
             $eventManager->attach($serviceManager->get('XdebugListener'));
         }
 
+        $grabOptions = $serviceManager->get('GrabOptions');
+
         $eventManager->attach($serviceManager->get('GrabPreListener'));
         $eventManager->attach($serviceManager->get('GrabAnalysisPageListener'));
         $eventManager->attach($serviceManager->get('GrabAnalysisStaticListener'));
         $eventManager->attach($serviceManager->get('GrabAnalysisCssListener'));
         $eventManager->attach($serviceManager->get('GrabDownloadListener'));
+
+        if ($grabOptions->getOutputError()) {
+            $eventManager->attach($serviceManager->get('GrabPostListener'));
+        }
+
     }
 
 }
