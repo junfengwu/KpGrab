@@ -4,7 +4,18 @@ KpGrab是一个基于Zend Framweork 2模块，主要功能是抓取整站静态�
 
 2.安装
 --------
-[github下载](https://github.com/h112367/KpGrab.git)，放入zf2 module文件夹里，application.config.php添加KpGrab模块
+[github下载](https://github.com/h112367/KpGrab.git)
+
+```
+#application.config.php
+return [
+	'modules' => [
+        // ...
+        'KpGrab',
+    ],
+];
+```
+
 
 3.使用
 --------
