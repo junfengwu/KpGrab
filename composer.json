@@ -6,7 +6,8 @@
     "zf2",
     "http",
     "grab",
-    "kittencup"
+    "kittencup",
+    "zend framework 2"
   ],
   "homepage": "http://www.kittencup.com",
   "require": {
