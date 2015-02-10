@@ -15,7 +15,6 @@ use KpGrab\Tools\Uri;
 use KpGrab\Exception\RuntimeException;
 use Zend\Dom\Document;
 use Zend\Http\Response;
-use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -60,18 +59,16 @@ class GrabAnalysisPage implements ListenerAggregateInterface
     }
 
     /**
-     * @param EventInterface $event
+     * @param GrabEvent $event
      */
-    public function runAnalysis(EventInterface $event)
+    public function runAnalysis(GrabEvent $event)
     {
-        /* @var $event \KpGrab\Event\Grab */
 
         $grabHttpClient = $event->getGrabHttpClient();
         $grabResult = $event->getGrabResult();
         $grabOptions = $event->getGrabOptions();
 
         $this->readyAnalyzedPageUrl[] = $event->getOrigUri()->toString();
-
 
         while (count($this->readyAnalyzedPageUrl) > 0) {
 
@@ -114,6 +111,7 @@ class GrabAnalysisPage implements ListenerAggregateInterface
                     $findUrl = $urlInfo['scheme'] . '://' . $urlInfo['host'] . $urlInfo['path'] . '/' . $findUrl;
                 }
 
+                $findUrl = Uri::getRealUrl($findUrl);
                 $findUrlInfo = Uri::parseAbsoluteUrl($findUrl);
 
                 if (!isset($findUrlInfo['extension'])) {
@@ -127,8 +125,6 @@ class GrabAnalysisPage implements ListenerAggregateInterface
                 if ($event->getOrigUri()->getHost() !== $findUrlInfo['host']) {
                     continue;
                 }
-
-                $findUrl = Uri::getRealUrl($findUrl);
 
                 if (!in_array($findUrl, $this->readyAnalyzedPageUrl) &&
                     !in_array($findUrl, $this->alreadyAnalyzedPageUrl) &&
