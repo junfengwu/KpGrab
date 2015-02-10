@@ -9,6 +9,7 @@
 
 namespace KpGrab\Controller;
 
+use Zend\Console\ColorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class Site extends AbstractActionController
