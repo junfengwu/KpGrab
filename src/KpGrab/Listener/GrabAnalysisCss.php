@@ -11,6 +11,8 @@ namespace KpGrab\Listener;
 
 use KpGrab\Event\Grab as GrabEvent;
 use Zend\Dom\Document;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -22,9 +24,10 @@ use KpGrab\Tools\Uri;
  * Class GrabAnalysisCss
  * @package KpGrab\Listener
  */
-class GrabAnalysisCss implements ListenerAggregateInterface
+class GrabAnalysisCss implements ListenerAggregateInterface, EventManagerAwareInterface
 {
     use ListenerAggregateTrait;
+    use EventManagerAwareTrait;
 
     const CSS_SUFFIX = 'css';
 
@@ -52,15 +55,15 @@ class GrabAnalysisCss implements ListenerAggregateInterface
 
             $url = array_shift($siteCssList);
 
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_CSS_PRE, $event->setParam('url', $url));
+
             $urlInfo = Uri::parseAbsoluteUrl($url);
 
             if (!isset($urlInfo['extension']) || $urlInfo['extension'] !== Static::CSS_SUFFIX) {
                 continue;
             }
 
-            $response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName());
-
-            if (!$response || $response->getStatusCode() !== Response::STATUS_CODE_200) {
+            if (!$response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName())) {
                 continue;
             }
 
@@ -97,9 +100,12 @@ class GrabAnalysisCss implements ListenerAggregateInterface
                 }
             }
 
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_CSS_POST, $event);
         }
 
         $grabResult->setGrabStaticUrl($analyzedStaticUrl);
+
+        $this->events->trigger(GrabEvent::GRAB_ANALYSIS_CSS_SUCCESS, $event);
     }
 
 }

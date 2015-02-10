@@ -79,7 +79,8 @@ class Module implements ConfigProviderInterface,
                 'GrabAnalysisStaticListener' => 'KpGrab\Listener\GrabAnalysisStatic',
                 'GrabAnalysisCssListener' => 'KpGrab\Listener\GrabAnalysisCss',
                 'GrabDownloadListener' => 'KpGrab\Listener\GrabDownload',
-                'GrabPostListener' => 'KpGrab\Listener\GrabPost'
+                'GrabPostListener' => 'KpGrab\Listener\GrabPost',
+                'GrabMessageListener' => 'KpGrab\Listener\GrabMessage'
             ],
             'factories' => [
                 'GrabOptions' => 'KpGrab\Service\Factory\GrabOptions',
@@ -139,6 +140,10 @@ class Module implements ConfigProviderInterface,
 
         if ($grabOptions->getOutputError()) {
             $eventManager->attach($serviceManager->get('GrabPostListener'));
+        }
+
+        if ($grabOptions->getShowMessage()) {
+            $eventManager->attach($serviceManager->get('GrabMessageListener'));
         }
 
     }

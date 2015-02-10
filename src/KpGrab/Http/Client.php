@@ -17,6 +17,7 @@ use Zend\Http\Client\Adapter\Exception\RuntimeException as ZendHttpClientAdapter
 use KpGrab\Exception\RuntimeException;
 use Zend\Http\Exception\InvalidArgumentException as ZendHttpInvalidArgumentException;
 use KpGrab\Exception\InvalidArgumentException;
+use Zend\Http\Response;
 
 /**
  * Class Client
@@ -67,6 +68,11 @@ class Client extends ZendClient
         }
 
         $this->reconnectionCount = 1;
+
+        if ($response->getStatusCode() !== Response::STATUS_CODE_200) {
+            $this->grabResult->setMessage(new RuntimeException(sprintf(MessageInterface::ERROR_CONNECT_CODE_MESSAGE, $this->getUri(), $response->getStatusCode())), $eventName);
+            return false;
+        }
 
         return $response;
     }

@@ -12,23 +12,19 @@ namespace KpGrab\Listener;
 use KpGrab\Event\Grab as GrabEvent;
 use KpGrab\Tools\Uri;
 use Zend\Dom\Document;
-use Zend\Http\Response;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 
 /**
  * Class GrabAnalysisStatic
  * @package KpGrab\Listener
  */
-class GrabAnalysisStatic implements ListenerAggregateInterface, ServiceLocatorAwareInterface, EventManagerAwareInterface
+class GrabAnalysisStatic implements ListenerAggregateInterface, EventManagerAwareInterface
 {
-    use ServiceLocatorAwareTrait;
     use ListenerAggregateTrait;
     use EventManagerAwareTrait;
 
@@ -70,13 +66,9 @@ class GrabAnalysisStatic implements ListenerAggregateInterface, ServiceLocatorAw
 
             $url = array_shift($readyAnalyzedStaticPageUrl);
 
-            $response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName());
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_STATIC_PRE, $event->setParam('url', $url));
 
-            if (!$response) {
-                continue;
-            }
-
-            if ($response->getStatusCode() !== Response::STATUS_CODE_200) {
+            if (!$response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName())) {
                 continue;
             }
 
@@ -124,10 +116,13 @@ class GrabAnalysisStatic implements ListenerAggregateInterface, ServiceLocatorAw
                 }
             }
 
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_STATIC_POST, $event);
+
         }
 
         $grabResult->setGrabStaticUrl($this->analyzedStaticUrl);
 
+        $this->events->trigger(GrabEvent::GRAB_ANALYSIS_STATIC_SUCCESS, $event);
     }
 
 }

@@ -14,6 +14,8 @@ use KpGrab\Result\MessageInterface;
 use KpGrab\Tools\Uri;
 use KpGrab\Exception\RuntimeException;
 use Zend\Dom\Document;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Http\Response;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -24,9 +26,10 @@ use Zend\EventManager\ListenerAggregateTrait;
  * Class GrabAnalysisPage
  * @package KpGrab\Listener
  */
-class GrabAnalysisPage implements ListenerAggregateInterface
+class GrabAnalysisPage implements ListenerAggregateInterface, EventManagerAwareInterface
 {
     use ListenerAggregateTrait;
+    use EventManagerAwareTrait;
 
     /**
      * @var array
@@ -74,16 +77,10 @@ class GrabAnalysisPage implements ListenerAggregateInterface
 
             $url = array_shift($this->readyAnalyzedPageUrl);
 
-            $response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName());
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_PAGE_PRE, $event->setParam('url', $url));
 
-            if (!$response) {
+            if (!$response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName())) {
                 $this->errorAnalyzedPageUrl[] = $url;
-                continue;
-            }
-
-            if ($response->getStatusCode() !== Response::STATUS_CODE_200) {
-                $this->errorAnalyzedPageUrl[] = $url;
-                $grabResult->setMessage(new RuntimeException(sprintf(MessageInterface::ERROR_CONNECT_CODE_MESSAGE, $url, $response->getStatusCode())), $event->getName());
                 continue;
             }
 
@@ -110,8 +107,6 @@ class GrabAnalysisPage implements ListenerAggregateInterface
                 if (!Uri::isAbsoluteUrl($findUrl)) {
                     $findUrl = $urlInfo['scheme'] . '://' . $urlInfo['host'] . $urlInfo['path'] . '/' . $findUrl;
                 }
-
-                $findUrl = Uri::getRealUrl($findUrl);
                 $findUrlInfo = Uri::parseAbsoluteUrl($findUrl);
 
                 if (!isset($findUrlInfo['extension'])) {
@@ -126,6 +121,8 @@ class GrabAnalysisPage implements ListenerAggregateInterface
                     continue;
                 }
 
+                $findUrl = Uri::getRealUrl($findUrl);
+
                 if (!in_array($findUrl, $this->readyAnalyzedPageUrl) &&
                     !in_array($findUrl, $this->alreadyAnalyzedPageUrl) &&
                     !in_array($findUrl, $this->errorAnalyzedPageUrl)
@@ -133,10 +130,13 @@ class GrabAnalysisPage implements ListenerAggregateInterface
                     $this->readyAnalyzedPageUrl[] = $findUrl;
                 }
             }
+
+            $this->events->trigger(GrabEvent::GRAB_ANALYSIS_PAGE_POST, $event);
         }
 
         $grabResult->setGrabPageUrl($this->alreadyAnalyzedPageUrl);
 
+        $this->events->trigger(GrabEvent::GRAB_ANALYSIS_PAGE_SUCCESS, $event);
     }
 
 }

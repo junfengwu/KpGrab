@@ -24,10 +24,27 @@ class Grab extends Event
      * Grab events
      */
     const GRAB_PRE = 'grab.pre';
+
     const GRAB_ANALYSIS_PAGE = 'grab.analysis.page';
+    const GRAB_ANALYSIS_PAGE_PRE = 'grab.analysis.page.pre';
+    const GRAB_ANALYSIS_PAGE_POST = 'grab.analysis.page.post';
+    const GRAB_ANALYSIS_PAGE_SUCCESS = 'grab.analysis.page.success';
+
     const GRAB_ANALYSIS_STATIC = 'grab.analysis.static';
+    const GRAB_ANALYSIS_STATIC_PRE = 'grab.analysis.static.pre';
+    const GRAB_ANALYSIS_STATIC_POST = 'grab.analysis.static.post';
+    const GRAB_ANALYSIS_STATIC_SUCCESS = 'grab.analysis.static.success';
+
     const GRAB_ANALYSIS_CSS = 'grab.analysis.css';
+    const GRAB_ANALYSIS_CSS_PRE = 'grab.analysis.css.pre';
+    const GRAB_ANALYSIS_CSS_POST = 'grab.analysis.css.post';
+    const GRAB_ANALYSIS_CSS_SUCCESS = 'grab.analysis.css.success';
+
     const GRAB_DOWNLOAD = 'grab.download';
+    const GRAB_DOWNLOAD_PRE = 'grab.download.pre';
+    const GRAB_DOWNLOAD_POST = 'grab.download.post';
+    const GRAB_DOWNLOAD_SUCCESS = 'grab.download.success';
+
     const GRAB_POST = 'grab.post';
 
     /**

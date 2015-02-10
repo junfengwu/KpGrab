@@ -10,23 +10,24 @@
 namespace KpGrab\Listener;
 
 use KpGrab\Event\Grab as GrabEvent;
-use KpGrab\Result\MessageInterface;
 use KpGrab\Tools\Html;
 use Zend\Dom\Document;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Http\Response;
-use KpGrab\Exception\RuntimeException;
 use KpGrab\Tools\Uri;
 
 /**
  * Class GrabDownload
  * @package KpGrab\Listener
  */
-class GrabDownload implements ListenerAggregateInterface
+class GrabDownload implements ListenerAggregateInterface, EventManagerAwareInterface
 {
     use ListenerAggregateTrait;
+    use EventManagerAwareTrait;
 
     /**
      * @param EventManagerInterface $events
@@ -45,7 +46,6 @@ class GrabDownload implements ListenerAggregateInterface
         $grabResult = $event->getGrabResult();
         $request = $event->getRequest();
         $grabHttpClient = $event->getGrabHttpClient();
-        $grabOptions = $event->getGrabOptions();
 
         $saveDir = $request->getParam('save-dir');
         $saveName = $request->getParam('save-name');
@@ -56,22 +56,15 @@ class GrabDownload implements ListenerAggregateInterface
 
             $url = array_shift($downloadList);
 
-            $response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName());
+            $this->events->trigger(GrabEvent::GRAB_DOWNLOAD_PRE, $event->setParam('url', $url));
 
-            if (!$response) {
+            if (!$response = $grabHttpClient->setUri($url)->canReconnectionSend($event->getName())) {
                 continue;
             }
-
-            if ($response->getStatusCode() !== Response::STATUS_CODE_200) {
-                $grabResult->setMessage(new RuntimeException(sprintf(MessageInterface::ERROR_CONNECT_CODE_MESSAGE, $url, $response->getStatusCode())), $event->getName());
-                continue;
-            }
-
 
             $urlInfo = Uri::parseAbsoluteUrl($url);
 
-            $downloadSaveDir = $saveDir . '/' . $saveName;
-            $downloadSaveDir .= '/' . $urlInfo['path'];
+            $downloadSaveDir = $saveDir . '/' . $saveName . '/' . $urlInfo['path'];
 
             if (!is_dir($downloadSaveDir)) {
                 mkdir($downloadSaveDir, 0777, true);
@@ -91,8 +84,10 @@ class GrabDownload implements ListenerAggregateInterface
 
             file_put_contents($downloadSaveDir . '/' . $fileName, $content);
 
+            $this->events->trigger(GrabEvent::GRAB_DOWNLOAD_POST, $event);
         }
 
+        $this->events->trigger(GrabEvent::GRAB_DOWNLOAD_SUCCESS, $event);
     }
 
 }

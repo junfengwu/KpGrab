@@ -46,11 +46,7 @@ class GrabPre implements ListenerAggregateInterface
 
         $request = $event->getRequest();
         $grabOptions = $event->getGrabOptions();
-        $saveDir = $request->getParam('save-dir');
-
-        if (!$saveDir) {
-            $saveDir = $grabOptions->getDefaultSaveDir();
-        }
+        $saveDir = $request->getParam('save-dir',$grabOptions->getDefaultSaveDir());
 
         if (!is_dir($saveDir) || !is_writable($saveDir)) {
             $event->getGrabResult()->setMessage(new InvalidArgumentException(sprintf(MessageInterface::ERROR_SAVE_DIR_MESSAGE, $saveDir)), $event->getName(), true);
@@ -74,7 +70,6 @@ class GrabPre implements ListenerAggregateInterface
 
         if (!$uri->isValid() || !$uri->isAbsolute()) {
             $event->getGrabResult()->setMessage(new InvalidArgumentException(MessageInterface::ERROR_URL_MESSAGE), $event->getName(), true);
-            return;
         }
 
         $event->setOrigUri($uri);
@@ -88,12 +83,7 @@ class GrabPre implements ListenerAggregateInterface
     public function setSaveName(GrabEvent $event)
     {
         $request = $event->getRequest();
-        $saveName = $request->getParam('save-name');
-
-        if (!$saveName) {
-            $saveName = md5(time() . $event->getOrigUri()->toString());
-        }
-
+        $saveName = $request->getParam('save-name',md5(time() . $event->getOrigUri()->toString()));
         $request->getParams()->set('save-name', $saveName);
 
     }
